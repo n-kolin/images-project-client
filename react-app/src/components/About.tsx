@@ -1,11 +1,11 @@
 import { Box, Typography, Button, Container } from '@mui/material';
 
 const About = () => {
-    const url = "https://img.freepik.com/premium-photo/low-angle-view-chandelier_1048944-12765396.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid"
+    const url = "../../public/welcome.gif"
     return (
-<>
-        <Container maxWidth="lg" sx={{ mt: 8 }}>
-            {/* <Box
+        <>
+            <Container maxWidth="lg" sx={{ mt: 8 }}>
+                {/* <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -21,10 +21,11 @@ const About = () => {
 
                 <Box
                     sx={{
+                        m: 0,
                         mt: 25,
                         position: 'relative',
                         width: '100%',
-                        height: '400px',
+                        height: '550px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -36,29 +37,11 @@ const About = () => {
                         boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.2)',
                     }}
                 >
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: 15,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Typography variant="h2" component="h1" sx={{ color:'#445', fontWeight: 'bold', mb: 2 }}>
-                            Welcome to our image upload service 
-                        </Typography>
 
 
-                    </Box>
-                {/* </Box> */}
 
-            </Box>
-        </Container>
+                </Box>
+            </Container>
         </>
     );
 };

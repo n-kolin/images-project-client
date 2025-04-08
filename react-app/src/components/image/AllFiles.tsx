@@ -12,8 +12,15 @@ import FolderCard from "./FolderCard";
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice";
 import { FolderType } from "../../types/FolderType";
 import { Add, ArrowBack, ArrowBackIosNewRounded, ArrowUpward, Cancel, CreateNewFolder, FolderOpen } from "@mui/icons-material";
+import DotLoader from "../DotLoader";
+import Loading from "../Loading";
 
 const AllFiles = () => {
+
+
+    //loading
+    const loadingFolder = useSelector((state: StoreType) => state.folders.loadingList);
+    const loadingFile = useSelector((state: StoreType) => state.files.loadingList);
 
 
     //add folder
@@ -35,7 +42,7 @@ const AllFiles = () => {
     const navigate = useNavigate();
 
     const handleAddFile = () => {
-        
+
         console.log(currentFolder)
         console.log(path);
         ;
@@ -147,11 +154,11 @@ const AllFiles = () => {
                 <IconButton size="small" disabled={currentFolder === null} onClick={handleUpClick}>
                     <ArrowUpward />
                 </IconButton>
-                <Box sx={{ ml: 2,display: 'inline-flex', }}>
+                <Box sx={{ ml: 2, display: 'inline-flex', }}>
                     <Typography variant="h6" color="primary" sx={{ fontWeight: 'bold' }}>
-                        {currentUser?.name +' '+ path.replace('/','/ ')}
+                        {currentUser?.name + path.replace(/\//g, " / ")}
                     </Typography>
-                    
+
                 </Box>
                 <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
                     <Button
@@ -187,7 +194,7 @@ const AllFiles = () => {
                     />
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <IconButton
-                       
+
                             color="secondary"
                             onClick={addFolder}
                             sx={{
@@ -201,10 +208,10 @@ const AllFiles = () => {
                                 height: 25
                             }}
                         >
-                            <FolderOpen sx={{fontSize:14}}/>
+                            <FolderOpen sx={{ fontSize: 14 }} />
                         </IconButton>
                         <IconButton
-                        size="small"
+                            size="small"
                             color="secondary"
                             onClick={handleCancel}
                             sx={{
@@ -217,14 +224,23 @@ const AllFiles = () => {
                                 height: 25
                             }}
                         >
-                            <Cancel sx={{fontSize:14}}/>
+                            <Cancel sx={{ fontSize: 14 }} />
                         </IconButton>
                     </Box>
                 </Box>
             )}
         </Box>
 
-        <Box sx={{ ml: 25, mr: 25, mb: 10, mt:10, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+
+
+
+        {
+            (loadingFolder || loadingFile)
+            &&
+            ( <Loading /> )
+        }
+
+        <Box sx={{ ml: 25, mr: 25, mb: 10, mt: 10, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {allFolders.map((folder) => (
                 <Box
                     key={folder.id}
@@ -234,7 +250,7 @@ const AllFiles = () => {
                         boxSizing: 'border-box',
                     }}
                 >
-                    <FolderCard path={path} folderId={folder.id} initFolderName={folder.name} onOpen={handleFolderClick} />
+                    <FolderCard path={path} folderId={folder.id} parentId={folder.parentId} initFolderName={folder.name} onOpen={handleFolderClick} />
                 </Box>
             ))}
         </Box>
@@ -255,7 +271,7 @@ const AllFiles = () => {
             ))}
         </Box>
 
-        
+
 
 
     </>)

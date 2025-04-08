@@ -14,12 +14,14 @@ import Swal from 'sweetalert2';
 const FolderCard = ({
     initFolderName,
     folderId,
+    parentId,
     path,
     onOpen
 }:
     {
         initFolderName: string,
         folderId: number,
+        parentId: number | null,
         path: string
         onOpen: any
     }) => {
@@ -54,6 +56,7 @@ const FolderCard = ({
             const updatedFolder: Partial<FolderType> = {
                 id: folderId,
                 name: folderName,
+                parentId
             }
             await dispatch(updateFolder({ id: folderId, folder: updatedFolder }));
             //לשנות את שם התיקיה

@@ -7,6 +7,7 @@ interface FilesState {
     files: FileType[];
     selectedFile:FileType | null;
     loading: boolean;
+    loadingList: boolean;
     error: string | null;
 }
 
@@ -14,6 +15,7 @@ const initialState: FilesState = {
     files: [],
     selectedFile:null,
     loading: false,
+    loadingList: false,
     error: null,
 };
 
@@ -156,29 +158,35 @@ const filesSlice = createSlice({
             //getFilesByUser
             .addCase(getFilesByUser.pending, (state) => {
                 state.loading = true;
+                state.loadingList = true;
                 state.error = null;
             })
             .addCase(getFilesByUser.fulfilled, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.files = action.payload;
                 state.selectedFile = null;
             })
             .addCase(getFilesByUser.rejected, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.error = action.payload as string;
             })
             //getChildFiles
             .addCase(getChildFiles.pending, (state) => {
                 state.loading = true;
+                state.loadingList = true;
                 state.error = null;
             })
             .addCase(getChildFiles.fulfilled, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.files = action.payload;
                 state.selectedFile = null;
             })
             .addCase(getChildFiles.rejected, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.error = action.payload as string;
             })
 

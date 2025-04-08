@@ -15,6 +15,7 @@ import { AppDispatch, StoreType } from "../../store/store";
 import { login } from "../../store/usersSlice";
 import { setCurrentUser } from "../../store/authSlice";
 import Loading from "../Loading";
+import DotLoader from "../DotLoader";
 const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
 
     const loading = useSelector((state: StoreType) => state.users.loading);
@@ -161,7 +162,7 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
                             Submit
                         </Button></div>
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
-                        {loading && <Loading />}
+                        {loading && <DotLoader />}
                     </Box>
                    
                   

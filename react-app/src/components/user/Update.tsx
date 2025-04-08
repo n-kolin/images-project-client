@@ -15,6 +15,7 @@ import usersSlice, { login, registration, updateUser } from "../../store/usersSl
 import { setCurrentUser } from "../../store/authSlice";
 import Swal from "sweetalert2";
 import Loading from "../Loading";
+import DotLoader from "../DotLoader";
 
 const Update = () => {
 
@@ -200,7 +201,7 @@ const Update = () => {
                             </Button></div>
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
-                            {loading && <Loading />}
+                            {loading && <DotLoader />}
                         </Box>
 
 

@@ -15,6 +15,7 @@ import usersSlice, { login, registration } from "../../store/usersSlice";
 import { setCurrentUser } from "../../store/authSlice";
 import Swal from "sweetalert2";
 import Loading from "../Loading";
+import DotLoader from "../DotLoader";
 const SignUp = ({onSuccess}:{onSuccess:()=>void}) => {
 
     const loading = useSelector((state: StoreType) => state.users.loading);
@@ -180,7 +181,7 @@ const SignUp = ({onSuccess}:{onSuccess:()=>void}) => {
                         </Button></div>
 
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
-                        {loading && <Loading />}
+                        {loading && <DotLoader />}
                     </Box>
                  
 

@@ -6,6 +6,7 @@ interface FoldersState {
     folders: FolderType[];
     selectedFolder: FolderType | null;
     loading: boolean;
+    loadingList: boolean;
     error: string | null;
 }
 
@@ -13,6 +14,7 @@ const initialState: FoldersState = {
     folders: [],
     selectedFolder: null,
     loading: false,
+    loadingList: false,
     error: null,
 };
 
@@ -48,9 +50,9 @@ export const getFolderById = createAsyncThunk<FolderType, number>(
 
 
 
-export const getChildFolders = createAsyncThunk<FolderType[],  number>(
+export const getChildFolders = createAsyncThunk<FolderType[], number>(
     'folders/getChildFolders',
-    async (parentId , thunkAPI) => {
+    async (parentId, thunkAPI) => {
         try {
             const response = await apiClient.get(`/folder/children/${parentId}`);
             return response.data;
@@ -75,9 +77,9 @@ export const addNewFolder = createAsyncThunk<FolderType, Partial<FolderType>>(
 export const updateFolder = createAsyncThunk<FolderType, { id: number, folder: Partial<FolderType> }>(
     'folders/update',
     async ({ id, folder }, thunkAPI) => {
-        
+
         try {
-            const response = await apiClient.put(`/folder/${id}`, {name:folder.name,parentId:folder.parentId});
+            const response = await apiClient.put(`/folder/${id}`, { name: folder.name, parentId: folder.parentId });
             return response.data;
         } catch (e) {
             return thunkAPI.rejectWithValue(e);
@@ -88,7 +90,7 @@ export const updateFolder = createAsyncThunk<FolderType, { id: number, folder: P
 export const softDeleteFolder = createAsyncThunk<FolderType, number>(
     'folders/softDelete',
     async (folderId, thunkAPI) => {
-        
+
         try {
             const response = await apiClient.delete(`/folder/soft/${folderId}`);
             return response.data;
@@ -143,14 +145,17 @@ const foldersSlice = createSlice({
         builder
             .addCase(getFoldersByUser.pending, (state) => {
                 state.loading = true;
+                state.loadingList = true;
                 state.error = null;
             })
             .addCase(getFoldersByUser.fulfilled, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.folders = action.payload;
             })
             .addCase(getFoldersByUser.rejected, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.error = action.error.message || 'Failed to fetch folders by user';
             })
             .addCase(getFolderById.pending, (state) => {
@@ -167,14 +172,17 @@ const foldersSlice = createSlice({
             })
             .addCase(getChildFolders.pending, (state) => {
                 state.loading = true;
+                state.loadingList = true;
                 state.error = null;
             })
             .addCase(getChildFolders.fulfilled, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.folders = action.payload;
             })
             .addCase(getChildFolders.rejected, (state, action) => {
                 state.loading = false;
+                state.loadingList = false;
                 state.error = action.error.message || 'Failed to fetch child folders';
             })
             .addCase(addNewFolder.pending, (state) => {

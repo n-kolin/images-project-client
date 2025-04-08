@@ -1,15 +1,19 @@
 import { AppBar, Box, colors, Toolbar, Typography } from "@mui/material"
 import { Link } from "react-router"
 import Auth from "./user/Auth"
+import { useSelector } from "react-redux";
+import { StoreType } from "../store/store";
 
 const Menu = () => {
+    const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
+
     const tabStyle = {
         textDecoration: 'none',
         border: '1px solid #92afae',
         margin: '3px',
         padding: '3px',
         borderRadius: '10px',
-        paddingRight:'15px', paddingLeft:'15px', backgroundColor:'#fff'
+        paddingRight: '15px', paddingLeft: '15px', backgroundColor: '#fff'
     }
     return (<>
 
@@ -29,16 +33,17 @@ const Menu = () => {
                         <Typography variant="h6" >about</Typography>
                     </Link>
 
-                    {
-                        // state.id &&
+                    {/* {
+                        currentUser &&
                         <Link to='/upload' style={tabStyle}>
                             <Typography variant="h6" >upload file</Typography>
                         </Link>
+                    } */}
+                    {currentUser &&
+                        <Link to='/all-files' style={tabStyle}>
+                            <Typography variant="h6" >all files</Typography>
+                        </Link>
                     }
-                    <Link to='/all-files' style={tabStyle}>
-                        <Typography variant="h6" >all files</Typography>
-                    </Link>
-
                 </Box>
             </Box>
         </AppBar>
