@@ -1,0 +1,11 @@
+@if(isLogedIn){
+    <button mat-flat-button color="primary" (click)="logOut()">log out</button>
+}
+@else{
+    <button mat-flat-button color="primary" (click)="openSignIn()">sign in</button>
+<!-- <app-registration-stats></app-registration-stats> -->
+}
+<button mat-flat-button color="primary" (click)="click()">click</button>
+
+<button mat-flat-button color="primary" [routerLink]="['/stats' ]">stats</button>
+<button mat-flat-button color="primary" [routerLink]="['/user' ]">manage user</button>

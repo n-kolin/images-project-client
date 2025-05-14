@@ -1,0 +1,61 @@
+<mat-dialog-content>
+    <form [formGroup]="registerForm" (ngSubmit)="addUser()">
+        <button mat-icon-button (click)="closeDialog()" style="float: right;">
+            <mat-icon>close</mat-icon>
+          </button>
+        <h2 mat-dialog-title>
+            <mat-icon matPrefix>person_add</mat-icon>
+           sign up
+        </h2>          
+            <mat-form-field>
+                <mat-label>full name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-icon matPrefix>person</mat-icon>
+                @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+                    <mat-error>
+                        Name is required
+                    </mat-error>
+                }
+            </mat-form-field>
+            
+            <mat-form-field>
+                <mat-label>email</mat-label>
+                <input matInput formControlName="email" required>
+                <mat-icon matPrefix>email</mat-icon>
+                @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+                    <mat-error>
+                        Email is invalid
+                    </mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>password</mat-label>
+                <input matInput formControlName="password" required>
+                <mat-icon matPrefix>lock</mat-icon>
+                @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                    <mat-error>
+                        Password is required
+                    </mat-error>
+                }
+            </mat-form-field>
+
+            <div>
+                <mat-label>your role</mat-label>
+
+                <mat-radio-group aria-label="Select an option" formControlName="role">
+                    <mat-radio-button  value="User" >User</mat-radio-button>
+                    <mat-radio-button  value="Admin">Admin</mat-radio-button>
+                </mat-radio-group>
+                @if (registerForm.get('role')?.invalid && registerForm.get('role')?.touched) {
+                    <mat-error>
+                        Role is required
+                    </mat-error>
+                }
+            </div>
+        
+        <button mat-raised-button type="submit" 
+        [disabled]="registerForm.invalid">
+           add user
+        </button>
+    </form>
+</mat-dialog-content>

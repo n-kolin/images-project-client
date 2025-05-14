@@ -1,0 +1,52 @@
+<div class="chart-container">
+    <h2 class="chart-title">{{ chartTitle }}</h2>
+    
+    <div class="chart-wrapper">
+      <ngx-charts-bar-vertical
+        [view]="view"
+        [results]="chartData"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [yAxisTickFormatting]="yAxisTickFormattingFn"
+        [yScaleMax]="yScaleMax"
+        [roundDomains]="true"
+        [showGridLines]="showGridLines"
+        [customColors]="customColors">
+      </ngx-charts-bar-vertical>
+    </div>
+    
+    <!-- Vertical Color Legend with Sharp Transitions -->
+    <div class="gradient-legend">
+      <div class="gradient-bar">
+        <div class="gradient-fill"></div>
+        <div class="color-section-high"></div>
+        <div class="color-section-medium-high"></div>
+        <div class="marker high">
+          <div class="marker-line"></div>
+          <span class="marker-label">{{ maxValue }}</span>
+        </div>
+        <div class="marker medium-high">
+          <div class="marker-line"></div>
+          <span class="marker-label">{{ quartile3 }}</span>
+        </div>
+        <div class="marker medium-low">
+          <div class="marker-line"></div>
+          <span class="marker-label">{{ quartile2 }}</span>
+        </div>
+        <div class="marker low">
+          <div class="marker-line"></div>
+          <span class="marker-label">{{ quartile1 }}</span>
+        </div>
+        <div class="marker min">
+          <div class="marker-line"></div>
+          <span class="marker-label">{{ minValue }}</span>
+        </div>
+      </div>
+    </div>
+  </div>

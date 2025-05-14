@@ -1,0 +1,69 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { MonthlyStats } from '../models/monthly-stats';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  private baseUrl = "http://localhost:5213/api/user"
+  private authUrl = "http://localhost:5213/api/auth/register"
+
+  private UsersSubject: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  public users$ = this.UsersSubject.asObservable();
+
+  constructor(private http: HttpClient) { }
+
+  getAllUsers() {
+
+    this.http.get<User[]>(this.baseUrl).subscribe(data => {
+      this.UsersSubject.next(data);
+    });
+
+  }
+  // getUserById(id: number): Observable<User> {
+  //   return this.http.get<User>(`${this.baseUrl}/${id}`);
+  // }
+  getUserByEmail(email: string): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/email/${email}`);
+  }
+
+  deleteUser(id: number) {
+    this.http.delete(`${this.baseUrl}/${id}`).subscribe(() => {
+      this.getAllUsers();
+    })
+  }
+
+  addUser(user: Omit<User, "id"|"createdAt">) {
+
+    console.log(user);
+    return this.http.post(this.authUrl,user).subscribe(() => {
+      this.getAllUsers();
+    })
+    
+  }
+
+
+  getRegistrationStats(): Observable<MonthlyStats[]> {
+    // debugger
+    return this.http.get<MonthlyStats[]>(`${this.baseUrl}/registration-stats`); 
+  }
+
+
+  emptyUsers() {
+
+    this.UsersSubject.next([]);
+
+  }
+
+
+   // פונקציה חדשה לריקון המערך
+   clearUsers() {
+    this.UsersSubject.next([]);
+  }
+
+
+}
