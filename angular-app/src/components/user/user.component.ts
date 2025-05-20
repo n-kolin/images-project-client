@@ -9,6 +9,7 @@ import { UserFormComponent } from '../user-form/user-form.component';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
+import { ErrorService } from '../../services/error.service';
 
 @Component({
   selector: 'app-user',
@@ -38,14 +39,12 @@ export class UserComponent {
     this.userService.users$.subscribe((data) => {
       this.users = data
       this.filteredUsers = data;
-    });
+    }
+  );
     this.userService.getAllUsers()
-    // console.log(this.users);
 
   }
-  f() {
-    this.userService.getAllUsers()
-  }
+  
 
   
   filterUsers(): void {
@@ -69,7 +68,7 @@ export class UserComponent {
   openUserForm() {
     const dialogRef = this.dialog.open(UserFormComponent, {
       width: '500px',
-      height: 'auto',
+      height: '600px',
       panelClass: 'centered-dialog',
     })
     // dialogRef.afterClosed().subscribe(result => {

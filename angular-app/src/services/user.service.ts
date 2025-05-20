@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 import { MonthlyStats } from '../models/monthly-stats';
+import { ErrorService } from './error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,18 @@ export class UserService {
   private UsersSubject: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   public users$ = this.UsersSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private errorService:ErrorService) { }
 
   getAllUsers() {
 
     this.http.get<User[]>(this.baseUrl).subscribe(data => {
       this.UsersSubject.next(data);
-    });
+    }, (e) => {
+        
+      this.errorService.handleHttpError(e);
+      console.log(e);
+    }
+  );
 
   }
   // getUserById(id: number): Observable<User> {

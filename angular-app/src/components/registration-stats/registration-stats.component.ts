@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { UserService } from '../../services/user.service';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ErrorService } from '../../services/error.service';
 
 interface RegistrationData {
   year: number;
@@ -57,8 +58,9 @@ export class RegistrationStatsComponent implements OnInit {
       "#F4AEE2", "#E26CAD", "#CD1980","#BB0951"
      ],
   }
+  
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,private errorService:ErrorService) {
     // Handle window resize
     window.addEventListener("resize", this.onResize.bind(this))
   }
@@ -72,7 +74,12 @@ export class RegistrationStatsComponent implements OnInit {
     this.userService.getRegistrationStats().subscribe((data) => {
       this.registrationData = data
       this.processLast12Months()
-    })
+    }, (e) => {
+        
+      this.errorService.handleHttpError(e);
+      console.log(e);
+    }
+  )
   }
 
   // Add this method to generate random user counts

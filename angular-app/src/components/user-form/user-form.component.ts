@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatRadioModule,
     MatDialogModule,
     MatIconModule,
+    
   ],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
@@ -29,6 +30,10 @@ import { MatIconModule } from '@angular/material/icon';
 export class UserFormComponent {
 
   registerForm: FormGroup;
+
+  hidePassword = true // Controls password visibility
+  emailFocused = false // Tracks if email field is focused
+  passwordFocused = false // Tracks if password field is focused
 
   constructor(private fb: FormBuilder, private userService: UserService,
     private router: Router, private activatedRoute: ActivatedRoute,

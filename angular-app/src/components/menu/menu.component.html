@@ -1,11 +1,53 @@
-@if(isLogedIn){
-    <button mat-flat-button color="primary" (click)="logOut()">log out</button>
-}
-@else{
-    <button mat-flat-button color="primary" (click)="openSignIn()">sign in</button>
-<!-- <app-registration-stats></app-registration-stats> -->
-}
-<button mat-flat-button color="primary" (click)="click()">click</button>
-
-<button mat-flat-button color="primary" [routerLink]="['/stats' ]">stats</button>
-<button mat-flat-button color="primary" [routerLink]="['/user' ]">manage user</button>
+<nav class="nav-menu" >
+    <div class="brand">
+      <div class="logo">
+        <mat-icon>photo_filter</mat-icon>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">PixelPro</span>
+        <span class="brand-subtitle">Admin Portal</span>
+      </div>
+    </div>
+    
+    <div class="nav-links">
+      <div class="nav-item">
+        <a class="nav-link home-link" [routerLink]="['/' ]" routerLinkActive="active">
+          <mat-icon>home</mat-icon>
+          <span>Home</span>
+        </a>
+      </div>
+      
+      <div class="nav-item">
+        <a class="nav-link stats-link" [routerLink]="['/stats' ]" routerLinkActive="active">
+          <mat-icon>insert_chart</mat-icon>
+          <span>Statistics</span>
+        </a>
+      </div>
+      
+      <div class="nav-item">
+        <a class="nav-link user-link" [routerLink]="['/user' ]" routerLinkActive="active">
+          <mat-icon>people</mat-icon>
+          <span>User Management</span>
+        </a>
+      </div>
+      
+      <div class="nav-item">
+        @if(isLogedIn){
+          <a class="nav-link logout-link" (click)="logOut()">
+            <mat-icon>logout</mat-icon>
+            <span>Log Out</span>
+          </a>
+        }
+        @else{
+          <a class="nav-link signin-link" (click)="openSignIn()">
+            <mat-icon>login</mat-icon>
+            <span>Sign In</span>
+          </a>
+        }
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Add this spacer element to push content below the fixed navigation -->
+  <div class="nav-spacer" [ngClass]="{'scrolled': isScrolled}"></div>
+  

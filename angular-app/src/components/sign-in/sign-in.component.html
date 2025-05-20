@@ -1,40 +1,71 @@
 
-<mat-dialog-content>
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
-        <button mat-icon-button (click)="closeDialog()" style="float: right;">
-            <mat-icon>close</mat-icon>
-          </button>
-        <h2 mat-dialog-title>
-            <mat-icon matPrefix>login</mat-icon>
 
-            sign in
-        </h2>
+      <mat-dialog-content>
+        <!-- Decorative elements -->
+        <div class="decorative-element glow-circle circle-1"></div>
+        <div class="decorative-element glow-circle circle-2"></div>
         
-                <mat-form-field>
-                    <mat-label>email</mat-label>
-                    <input matInput formControlName="email" required>
-                    <mat-icon matPrefix>email</mat-icon>
-                    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-                        <mat-error>
-                            Email is invalid
-                        </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>password</mat-label>
-                    <input matInput formControlName="password" required>
-                    <mat-icon matPrefix>lock</mat-icon>
-                    @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                        <mat-error>
-                            Password is required
-                        </mat-error>
-                    }
-                </mat-form-field>
-                
-           
-        <button mat-raised-button type="submit" 
-        [disabled]="loginForm.invalid">
-            sign in
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <!-- Header with title and close button on the same line -->
+          <div class="form-header">
+            <button mat-icon-button (click)="closeDialog()" class="close-button">
+              <mat-icon>close</mat-icon>
+            </button>
+            <h2 mat-dialog-title>
+              <span class="title-text">Sign In</span>
+            </h2>
+          </div>
+          
+         
+      <!-- Email field -->
+      <div class="form-field-container email-field" [ngClass]="{'focused': emailFocused}">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput 
+                 formControlName="email" 
+                 required 
+                 type="email"
+                 (focus)="emailFocused = true"
+                 (blur)="emailFocused = false">
+          <mat-icon matPrefix>email</mat-icon>
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <mat-error>
+              Email is invalid
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+      
+      <!-- Password field -->
+      <div class="form-field-container password-field" [ngClass]="{'focused': passwordFocused}">
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput 
+                 formControlName="password" 
+                 required 
+                 [type]="hidePassword ? 'password' : 'text'"
+                 (focus)="passwordFocused = true"
+                 (blur)="passwordFocused = false">
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-icon matSuffix (click)="hidePassword = !hidePassword">
+            {{hidePassword ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <mat-error>
+              Password is required
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+      
+      <!-- Submit button - smaller and left-aligned -->
+      <div class="submit-container">
+        <button mat-raised-button 
+                class="submit-button" 
+                type="submit" 
+                [disabled]="loginForm.invalid">
+          Sign In
         </button>
+      </div>
     </form>
-</mat-dialog-content>
+  </mat-dialog-content>

@@ -1,0 +1,440 @@
+/* Dialog container styling */
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+  padding: 0 !important;
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
+/* Dialog content styling - more compact */
+mat-dialog-content {
+  padding: 1.5rem !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: visible !important;
+  background: transparent;
+}
+
+/* Form styling - more compact */
+form {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Form header with title and close button */
+.form-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.8rem;
+}
+
+/* Title styling - colorful and centered */
+h2.mat-dialog-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title-text {
+  background: linear-gradient(90deg, #ff6b6b, #ffa07a, #ffd166, #06d6a0, #118ab2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Close button styling */
+.close-button {
+  position: absolute !important;
+  top: 50% !important;
+  right: -10px !important;
+  transform: translateY(-50%) !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #666 !important;
+  transition: all 0.3s ease !important;
+  z-index: 5 !important;
+  border: none !important;
+  min-width: unset !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Effect for close button */
+.close-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.8), rgba(255, 160, 122, 0.8));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.close-button:hover {
+  color: white !important;
+  transform: translateY(-50%) rotate(90deg) !important;
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+.close-button:hover::before {
+  opacity: 1;
+}
+
+.close-button mat-icon {
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+  line-height: 16px !important;
+}
+
+/* Input fields - fixed borders */
+.input-field {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem; /* הגדלת המרווח בין השדות מ-0.3rem ל-1rem */
+  transition: all 0.3s ease;
+}
+
+/* Form fields styling - fixed borders */
+mat-form-field {
+  width: 100%;
+}
+
+/* Fix input borders to match field size */
+::ng-deep .mat-mdc-form-field-flex {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  height: 50px !important; /* גובה קבוע לכל השדות */
+  width: 100% !important; /* רוחב מלא */
+  box-sizing: border-box !important; /* כולל padding וborder ברוחב */
+}
+
+::ng-deep .mat-mdc-form-field:hover .mat-mdc-form-field-flex {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* הסרת המסגרת מהשדות */
+::ng-deep .mdc-notched-outline__leading,
+::ng-deep .mdc-notched-outline__notch,
+::ng-deep .mdc-notched-outline__trailing {
+  border-color: transparent !important;
+  border-width: 0px !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: transparent !important;
+  border-width: 0px !important;
+}
+
+/* Reduce height of inputs */
+::ng-deep .mat-mdc-form-field-infix {
+  min-height: 50px !important; /* גובה אחיד */
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  display: flex !important;
+  align-items: center !important; /* מירכוז אנכי של התוכן */
+  width: calc(100% - 40px) !important; /* רוחב קבוע לכל השדות, עם מרווח לאייקונים */
+  width: 100% !important; /* רוחב מלא */
+  box-sizing: border-box !important;
+  padding-right: 40px !important; /* מרווח בצד ימין עבור האייקון */
+}
+
+/* Icon styling */
+::ng-deep mat-form-field mat-icon[matPrefix] {
+  color: #118ab2 !important;
+  margin-right: 8px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  align-self: center; /* מירכוז אנכי */
+}
+
+/* Password visibility icon */
+::ng-deep mat-form-field mat-icon[matSuffix] {
+  color: rgba(0, 0, 0, 0.5) !important;
+  cursor: pointer;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  transition: color 0.3s ease;
+  position: absolute !important;
+  top: 50% !important; /* מיקום אנכי במרכז */
+  transform: translateY(-50%) !important; /* מיקום אנכי במרכז */
+  right: 10px !important; /* מיקום קבוע מימין */
+}
+
+::ng-deep mat-form-field mat-icon[matSuffix]:hover {
+  color: #118ab2 !important;
+}
+
+/* Label styling */
+::ng-deep .mat-mdc-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-label {
+  color: #118ab2 !important;
+}
+
+/* Error styling */
+::ng-deep .mat-mdc-form-field-error {
+  color: #ff6b6b;
+  font-size: 0.75rem;
+  margin-top: 0.1rem;
+}
+
+/* Role selection styling */
+.role-selection {
+  margin: 0.3rem 0 1rem; /* הגדלת המרווח התחתון */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.role-selection mat-label {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 0.2rem;
+  text-transform: capitalize;
+}
+
+/* Role options */
+.role-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.role-option {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.role-option input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.role-content {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border: none; /* הסרת המסגרת */
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  height: 50px; /* גובה אחיד התואם לשדות הקלט */
+}
+
+.role-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(17, 138, 178, 0.4);
+  margin-right: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.role-indicator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #118ab2;
+  transition: all 0.3s ease;
+}
+
+.role-option span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.7);
+  transition: all 0.3s ease;
+}
+
+.role-option:hover .role-content {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.role-option.selected .role-content {
+  background: rgba(17, 138, 178, 0.1);
+  box-shadow: 0 4px 12px rgba(17, 138, 178, 0.15);
+}
+
+.role-option.selected .role-indicator {
+  border-color: #118ab2;
+  background: rgba(17, 138, 178, 0.1);
+}
+
+.role-option.selected .role-indicator::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.role-option.selected span {
+  color: #118ab2;
+  font-weight: 600;
+}
+
+/* Submit button container */
+.submit-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.8rem; /* הגדלת המרווח העליון */
+}
+
+/* Submit button styling - like login form */
+.submit-button {
+  width: 100%;
+  padding: 0.8rem !important;
+  border-radius: 50px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  background: transparent !important; /* Transparent background */
+  color: #118ab2 !important; /* Blue color */
+  border: 2px solid #118ab2 !important; /* Blue border */
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  box-shadow: none !important; /* No shadow */
+}
+
+.submit-button:hover:not([disabled]) {
+  background-color: rgba(17, 138, 178, 0.1) !important; /* Light blue background on hover */
+  transform: translateY(-2px) !important;
+}
+
+.submit-button[disabled] {
+  background: transparent !important;
+  color: #a0a0a0 !important;
+  border-color: #e0e0e0 !important;
+}
+
+/* Decorative elements */
+.decorative-element {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.glow-circle {
+  border-radius: 50%;
+  filter: blur(30px);
+}
+
+.circle-1 {
+  top: 10%;
+  left: -10%;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0) 70%);
+}
+
+.circle-2 {
+  bottom: -5%;
+  right: -10%;
+  width: 170px;
+  height: 170px;
+  background: radial-gradient(circle, rgba(6, 214, 160, 0.15) 0%, rgba(6, 214, 160, 0) 70%);
+}
+
+/* Dialog animation */
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  animation: dialogFadeIn 0.4s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  mat-dialog-content {
+    padding: 1.2rem !important;
+  }
+
+  h2.mat-dialog-title {
+    font-size: 1.4rem;
+  }
+
+  form {
+    gap: 0.5rem;
+  }
+
+  .role-options {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .submit-button {
+    padding: 0.7rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* וידוא שהטקסט בשדה הסיסמה לא חורג */
+::ng-deep .mat-mdc-input-element {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}

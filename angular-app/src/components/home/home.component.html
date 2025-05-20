@@ -1,2 +1,48 @@
-<p>home works!</p>
-
+<div class="dashboard-container">
+  <div class="welcome-section">
+    <h1 class="welcome-title">Image Management Admin Portal</h1>
+    <p class="welcome-subtitle">Control panel for managing users and content</p>
+    
+    <div class="welcome-description">
+      <p>Welcome to the administrator dashboard. Use the options below to manage users, view statistics, or add new users to the system.</p>
+    </div>
+  </div>
+  
+  <div class="dashboard-cards">
+    <div class="dashboard-card users-card">
+      <div class="card-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <h2>User Management</h2>
+      <p>View, edit, and manage user accounts. Control permissions and monitor user activity.</p>
+      <button class="card-button" [routerLink]="['/user' ]" routerLinkActive="active">
+        <span>View Users</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    
+    <div class="dashboard-card stats-card">
+      <div class="card-icon">
+        <mat-icon>bar_chart</mat-icon>
+      </div>
+      <h2>Statistics</h2>
+      <p>View monthly registration statistics and analyze user growth trends over time.</p>
+      <button class="card-button" [routerLink]="['/stats' ]" routerLinkActive="active">
+        <span>View Stats</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    
+    <div class="dashboard-card add-user-card">
+      <div class="card-icon">
+        <mat-icon>person_add</mat-icon>
+      </div>
+      <h2>Add New User</h2>
+      <p>Create a new user account with customized permissions and settings.</p>
+      <button class="card-button" (click)="openAddUserForm()">
+        <span>Add User</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -8,9 +8,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute, Route, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ErrorService } from '../../services/error.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -24,6 +25,7 @@ import { AuthService } from '../../services/auth.service';
     MatRadioModule,
     MatDialogModule,
     MatIconModule,
+    NgClass,
   ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.css'
@@ -31,8 +33,13 @@ import { AuthService } from '../../services/auth.service';
 export class SignInComponent implements OnInit {
   loginForm: FormGroup;
 
+  hidePassword = true // Controls password visibility
+  emailFocused = false // Tracks if email field is focused
+  passwordFocused = false // Tracks if password field is focused
+
   constructor(private fb: FormBuilder, private authService: AuthService,
-    private dialogRef: MatDialogRef<SignInComponent>
+    private dialogRef: MatDialogRef<SignInComponent>,
+    private errorService:ErrorService
   ) { }
 
   ngOnInit() {
@@ -51,7 +58,10 @@ export class SignInComponent implements OnInit {
         this.dialogRef.close(true);
 
       }, (e) => {
-        this.dialogRef.close(false);
+        
+        this.errorService.handleHttpError(e);
+
+        // this.dialogRef.close(false);
         console.log(e);
         console.log(this.loginForm.value);  
       }
@@ -64,6 +74,10 @@ export class SignInComponent implements OnInit {
     console.log('close');
     
 
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword
   }
 
 }

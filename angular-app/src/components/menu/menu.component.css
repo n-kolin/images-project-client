@@ -1,0 +1,315 @@
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 110px;
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent background all the time */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2rem;
+    padding: 0 3rem;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  /* Rainbow gradient border at the bottom */
+  .nav-menu::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #ffa07a, #ffd166, #06d6a0, #118ab2);
+    opacity: 1;
+    transition: opacity 0.7s ease;
+  }
+  
+  /* Scrolled state - more compact but less dramatic difference */
+  /* .nav-menu.scrolled {
+    height: 80px;
+    background: rgba(255, 255, 255, 0.9); 
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .nav-menu.scrolled::after {
+    opacity: 0.8;
+  } */
+  
+  /* Logo/brand section */
+  .brand {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ff6b6b, #ffa07a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .nav-menu.scrolled .logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo mat-icon {
+    color: white;
+    font-size: 32px;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .nav-menu.scrolled .logo mat-icon {
+    font-size: 28px;
+  }
+  
+  .brand-text {
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .brand-name {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ff6b6b, #ffa07a, #ffd166, #06d6a0, #118ab2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+    line-height: 1.2;
+  }
+  
+  .nav-menu.scrolled .brand-name {
+    font-size: 1.7rem;
+  }
+  
+  .brand-subtitle {
+    font-size: 1rem;
+    color: #888;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+  }
+  
+  .nav-menu.scrolled .brand-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  /* Navigation links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    height: 100%;
+  }
+  
+  .nav-item {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #555;
+    padding: 0 0.5rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  /* Colored icons */
+  .nav-link mat-icon {
+    font-size: 26px;
+    transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .nav-menu.scrolled .nav-link mat-icon {
+    font-size: 24px;
+  }
+  
+  .nav-link.home-link mat-icon {
+    color: #ff6b6b;
+  }
+  
+  .nav-link.stats-link mat-icon {
+    color: #ffd166;
+  }
+  
+  .nav-link.user-link mat-icon {
+    color: #06d6a0;
+  }
+  
+  .nav-link.signin-link mat-icon,
+  .nav-link.logout-link mat-icon {
+    color: #118ab2;
+  }
+  
+  /* Hover indicator - subtle underline */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    transition: all 0.4s ease;
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 80%;
+    opacity: 1;
+  }
+  
+  .nav-link.home-link::after {
+    background-color: #ff6b6b;
+  }
+  
+  .nav-link.stats-link::after {
+    background-color: #ffd166;
+  }
+  
+  .nav-link.user-link::after {
+    background-color: #06d6a0;
+  }
+  
+  .nav-link.signin-link::after,
+  .nav-link.logout-link::after {
+    background-color: #118ab2;
+  }
+  
+  /* Text color change on hover and active */
+  .nav-link:hover,
+  .nav-link.active {
+    font-weight: 600;
+  }
+  
+  .nav-link.home-link:hover,
+  .nav-link.home-link.active {
+    color: #ff6b6b;
+  }
+  
+  .nav-link.stats-link:hover,
+  .nav-link.stats-link.active {
+    color: #ffd166;
+  }
+  
+  .nav-link.user-link:hover,
+  .nav-link.user-link.active {
+    color: #06d6a0;
+  }
+  
+  .nav-link.signin-link:hover,
+  .nav-link.signin-link.active,
+  .nav-link.logout-link:hover,
+  .nav-link.logout-link.active {
+    color: #118ab2;
+  }
+  
+  /* Navigation spacer - to push content below the fixed navigation */
+  .nav-spacer {
+    height: 110px; /* Same as the initial nav height */
+    transition: height 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .nav-spacer.scrolled {
+    height: 80px; /* Same as the scrolled nav height */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .nav-menu {
+      padding: 0 1.5rem;
+      gap: 1.5rem;
+    }
+  
+    .brand-subtitle {
+      display: none;
+    }
+  
+    .nav-links {
+      gap: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .nav-menu {
+      height: auto;
+      padding: 1.2rem 1rem;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .nav-menu.scrolled {
+      padding: 0.8rem 1rem;
+    }
+  
+    .brand {
+      margin: 0 0 1rem 0;
+      justify-content: center;
+    }
+  
+    .nav-links {
+      width: 100%;
+      justify-content: space-around;
+    }
+  
+    .nav-link span {
+      display: none;
+    }
+  
+    .nav-link {
+      flex-direction: column;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+    }
+  
+    .nav-link::after {
+      bottom: -5px;
+    }
+  
+    .nav-spacer {
+      height: 130px; /* Adjusted for mobile layout */
+    }
+  
+    .nav-spacer.scrolled {
+      height: 100px; /* Adjusted for mobile layout */
+    }
+  }
+  
+  /* Animation for the menu when scrolling - more subtle */
+  @keyframes subtleSlideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0.9;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .nav-menu.scrolled {
+    animation: subtleSlideDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  

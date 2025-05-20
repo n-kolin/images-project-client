@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SignInComponent } from '../sign-in/sign-in.component';
 import { Router, RouterLink } from '@angular/router';
@@ -6,17 +6,22 @@ import { MatButton } from '@angular/material/button';
 import { UserComponent } from "../user/user.component";
 import { RegistrationStatsComponent } from '../registration-stats/registration-stats.component';
 import { UserService } from '../../services/user.service';
+import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [MatButton, UserComponent, RegistrationStatsComponent, RouterLink],
+  imports: [MatButton, UserComponent, RegistrationStatsComponent, RouterLink
+    , MatIcon, NgClass
+  ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
 export class MenuComponent {
 
   isLogedIn = false;
+  isScrolled = false;
 
   constructor(private router: Router, private dialog: MatDialog,
     private userService:UserService
@@ -33,7 +38,6 @@ console.log('jhj');
   // this.isLogedIn=true
   }
   openSignIn() {
-    console.log('jghgh');
     
     const dialogRef = this.dialog.open(SignInComponent, {
       width: '500px',
@@ -50,19 +54,11 @@ console.log('jhj');
 
 
   logOut() {
-
     sessionStorage.removeItem("accessToken");
     this.isLogedIn = false;
-    this.router.navigateByUrl('');
-
+    this.router.navigateByUrl('')
     this.userService.clearUsers();
-
   }
-
-  click() {
-
-    console.log('clicked');
-    
-
-  }
+  
+  
 }

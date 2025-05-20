@@ -19,5 +19,16 @@ export class AuthService {
       password: user.password
     })
   }
+
+
+  // בדיקה אם המשתמש מחובר
+  isAuth(): boolean {
+    return !!sessionStorage.getItem('accessToken');
+  }
+  
+  // קבלת הטוקן
+  getToken(): string | null {
+    return sessionStorage.getItem('accessToken');
+  }
   
 }
