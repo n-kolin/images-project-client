@@ -72,8 +72,8 @@ const EditorPreview: React.FC = () => {
       if (imageState.imageData) {
         const image = new Image();
         image.crossOrigin = "anonymous"; // Prevent CORS issues
-        image.src = imageState.imageData;
-        // image.src = 'https://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
+        // image.src = imageState.imageData;
+        image.src = 'https://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
         image.onload = () => {
           ctx.save();
 
