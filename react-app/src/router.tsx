@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createHashRouter } from "react-router";
 import AppLayout from "./components/AppLayout";
 import UploadImage from "./components/file/UploadImage";
 
@@ -12,7 +12,7 @@ import ImageEditor from "./components/editor/ImageEditor";
 import AiEditor from "./components/editor-ai/AiEditor";
 import { ImageEditorProvider } from "./context/ImageEditorContext";
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
     {
         path: '/',
         element:
