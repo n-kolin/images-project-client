@@ -296,7 +296,7 @@ const ToolIndicator = styled(Box)({
 export default function FramePreview() {
   const imageUrl = "/imgs/1.jpg"
   const frameUrl = "/imgs/frame2.png"
-  const onSave = () => {}
+  const onSave = (dataUrl: string) => {}
 
   // State for image transformations
   const [scale, setScale] = useState(1)

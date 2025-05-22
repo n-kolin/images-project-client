@@ -1,13 +1,10 @@
 import { createBrowserRouter } from "react-router";
 import AppLayout from "./components/AppLayout";
 import UploadImage from "./components/file/UploadImage";
-import Download from "./components/file/Download";
-import SignUp from "./components/user/SignUp";
+
 import Update from "./components/user/Update";
-import SignIn from "./components/user/SignIn";
 import AllFiles from "./components/image/AllFiles";
 import About from "./components/About";
-import Gallery from "./components/framing/Gallery";
 import FramePreview from "./components/framing/FramePreview.";
 import Canvas from "./components/canvas/Canvas";
 // import SignupForm from "./components/canvas/SSS";

@@ -104,7 +104,7 @@ const editorAiSlice = createSlice({
       
       // טיפול בבדיקת בריאות השרת
       .addCase(checkServerHealth.rejected, (state, action) => {
-        state.error = 'השרת אינו זמין כרגע';
+        state.error = action.payload as string;
       });
   },
 });

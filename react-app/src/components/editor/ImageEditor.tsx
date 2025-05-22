@@ -29,13 +29,10 @@
 
 // components/ImageEditor/ImageEditor.tsx
 
-import React, { useEffect, useState } from 'react';
-import { ImageEditorProvider, useImageEditorContext } from '../../context/ImageEditorContext';
+import React from 'react';
 import EditorPreview from './EditorPreview';
 import HistoryManager from './HistoryManager';
-import TextTool from './tools/Text';
-import RotateTool from './tools/Rotate';
-import BackgroundTool from './tools/Background';
+
 import AIDesignTool from './tools/AIDesignTool';
 
 const ImageEditor: React.FC = () => {

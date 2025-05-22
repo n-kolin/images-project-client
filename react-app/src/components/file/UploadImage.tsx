@@ -7,7 +7,7 @@ import { AppDispatch, StoreType } from '../../store/store';
 import { Box, Button, Typography } from '@mui/material';
 import apiClient from '../../apiClient';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 const UploadImage: React.FC = () => {
 
@@ -18,7 +18,7 @@ const UploadImage: React.FC = () => {
 
     
     const [file, setFile] = useState<File | null>(null);
-    const [message, setMessage] = useState<string>('');
+    const [_, setMessage] = useState<string>('');
 
     const dispatch = useDispatch<AppDispatch>();
 

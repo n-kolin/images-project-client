@@ -103,7 +103,7 @@ const AiEditor: React.FC<AiEditorProps> = ({ imageUrl }) => {
   
   // שימוש בסלקטורים המעודכנים מהסטור
   const {
-    originalInstructions,
+    // originalInstructions,
     refinedInstructions,
     imageAnalysis,
     modifiedImage,
