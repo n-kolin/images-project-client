@@ -34,6 +34,7 @@ import EditorPreview from './EditorPreview';
 import HistoryManager from './HistoryManager';
 
 import AIDesignTool from './tools/AIDesignTool';
+import { ImageEditorProvider } from '../../context/ImageEditorContext';
 
 const ImageEditor: React.FC = () => {
 
@@ -53,7 +54,7 @@ const ImageEditor: React.FC = () => {
 
   
   return (
-    // <ImageEditorProvider>
+    <ImageEditorProvider>
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
           <h1 style={{ textAlign: 'center' }}>Image Editor</h1>
           <EditorPreview />
@@ -67,7 +68,7 @@ const ImageEditor: React.FC = () => {
           </div> */}
           <HistoryManager />
         </div>
-    // </ImageEditorProvider>
+     </ImageEditorProvider>
   );
 };
 
