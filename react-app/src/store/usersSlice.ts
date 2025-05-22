@@ -54,6 +54,8 @@ export const login = createAsyncThunk<UserType, LoginType>(
     async (user: LoginType, thunkAPI) => {
         try {
             const response = await axios.post(baseURL+'auth/login', user);
+            console.log(response.data);
+            
             return response.data; 
         } catch (e) {  
             console.log(e);
