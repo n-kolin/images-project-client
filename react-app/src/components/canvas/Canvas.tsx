@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import FramesGallery from './FramesGallery';
 import Actions from './Actions';
-import { useLocation, useSearchParams } from 'react-router';
+import { useLocation } from 'react-router';
 
 const CanvasImage: React.FC = () => {
 

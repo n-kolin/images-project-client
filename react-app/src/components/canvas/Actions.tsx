@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Text from "./Text";
 
@@ -7,7 +7,7 @@ const Actions = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const [rotate, setRotate] = useState(0)
+    const [_, setRotate] = useState(0)
     const rotateLeft = () => {
         setRotate((prevRotate) => {
             const newRotate = prevRotate + 0.05;
