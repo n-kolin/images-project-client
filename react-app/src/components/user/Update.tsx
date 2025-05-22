@@ -1,20 +1,19 @@
 import { yupResolver } from "@hookform/resolvers/yup"
-import { FormEvent, useState } from "react"
-import { Controller, SubmitHandler, useForm } from "react-hook-form"
+import { useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { object, string } from "yup"
-import { AccountCircle, PersonAdd, Person, Group, Email, Lock, Assignment, HowToReg, Login, VisibilityOff, Visibility, Title, Password, Close, Edit } from "@mui/icons-material";
-import { AlertTitle, Box, Button, CircularProgress, FormControl, FormControlLabel, FormHelperText, FormLabel, IconButton, InputAdornment, InputLabel, Modal, OutlinedInput, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { Person, Email, VisibilityOff, Visibility, Close, Edit } from "@mui/icons-material";
+import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Modal, OutlinedInput, Radio, RadioGroup, TextField, Typography } from "@mui/material"
 import { modalStyle } from "../../styles/ModalStyle"
 
-import { LoginType, UserType } from "../../types/UserType";
+import { UserType } from "../../types/UserType";
 
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, StoreType } from "../../store/store";
-import usersSlice, { login, registration, updateUser } from "../../store/usersSlice";
+import {  updateUser } from "../../store/usersSlice";
 import { setCurrentUser } from "../../store/authSlice";
 import Swal from "sweetalert2";
-import Loading from "../Loading";
 import DotLoader from "../DotLoader";
 
 const Update = () => {
@@ -40,10 +39,8 @@ const Update = () => {
 
 
     const {
-        control,
         register,
         handleSubmit,
-        watch,
         formState: { errors },
         reset
     } = useForm({
@@ -72,8 +69,6 @@ const Update = () => {
 
             console.log(res);
             console.log('ghj');
-
-
 
         }
         else {

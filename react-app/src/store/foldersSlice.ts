@@ -224,11 +224,11 @@ const foldersSlice = createSlice({
                 state.error = action.error.message || 'Failed to delete folder';
             })
             //soft delete rec
-            .addCase(softDeleteFolderRecursively.pending, (state) => {
+            .addCase(softDeleteFolderRecursively.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(softDeleteFolderRecursively.fulfilled, (state) => {
+            .addCase(softDeleteFolderRecursively.fulfilled, (state, action:any) => {
                 state.loading = false;
                 state.folders = state.folders.filter((folder) => folder.id !== action.payload.id);
             })
