@@ -70,6 +70,8 @@ const EditorPreview: React.FC = () => {
       // imageState.imageData = 'https://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
 
       if (true) {
+        console.log("in preview", imageState);
+        
         const image = new Image();
         image.crossOrigin = "anonymous"; // Prevent CORS issues
         image.src = imageState.imageData;
@@ -181,9 +183,8 @@ const EditorPreview: React.FC = () => {
 
 
 
-          ctx.strokeStyle = 'black'; // Default stroke color
-          ctx.lineWidth = 2;
           
+
           ctx.restore();
         };
       }

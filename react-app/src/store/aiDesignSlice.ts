@@ -41,11 +41,17 @@ const API_URL = 'https://image-editor-api-rcl9.onrender.com/image-design';
 export const generateDesign = createAsyncThunk<AIDesignResponse, AIDesignRequest>(
   'aiDesign/generate',
   async (request: AIDesignRequest, thunkAPI) => {
+    console.log('Request:', request);
+    
     try {
       const response = await axios.post(API_URL, request);
+      console.log('Response:', response);
+      
       return response.data;
     } catch (e: any) {
       // שליחת השגיאה ל-Redux
+      console.log('Error:', e);
+      
       if (e.response && e.response.data && typeof e.response.data.error === 'string') {
         return thunkAPI.rejectWithValue(e.response.data.error);
       }
