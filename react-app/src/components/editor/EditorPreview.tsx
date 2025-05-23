@@ -60,7 +60,7 @@ const EditorPreview: React.FC = () => {
   const { imageState } = useImageEditorContext();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
- 
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
@@ -69,7 +69,7 @@ const EditorPreview: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       // imageState.imageData = 'https://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
 
-      if (imageState.imageData||!imageState.imageData) {
+      if (true) {
         const image = new Image();
         image.crossOrigin = "anonymous"; // Prevent CORS issues
         image.src = imageState.imageData;
@@ -80,21 +80,21 @@ const EditorPreview: React.FC = () => {
           // Apply transformations if they exist
           if (imageState.filters.transform) {
             const { rotation = 0, scale = 1, flipX = false, flipY = false } = imageState.filters.transform;
-            
+
             ctx.translate(canvas.width / 2, canvas.height / 2);
-            
+
             if (rotation) {
               ctx.rotate((rotation * Math.PI) / 180);
             }
-            
+
             if (scale !== 1) {
               ctx.scale(scale, scale);
             }
-            
+
             if (flipX || flipY) {
               ctx.scale(flipX ? -1 : 1, flipY ? -1 : 1);
             }
-            
+
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
           }
 
@@ -102,7 +102,7 @@ const EditorPreview: React.FC = () => {
           if (imageState.filters.crop) {
             const { x, y, width, height } = imageState.filters.crop;
             ctx.drawImage(
-              image, 
+              image,
               x, y, width, height, // source
               0, 0, canvas.width, canvas.height // destination
             );
@@ -113,14 +113,14 @@ const EditorPreview: React.FC = () => {
           // Apply filters if they exist
           if (imageState.filters.filter) {
             const { brightness, contrast, saturation, blur, grayscale } = imageState.filters.filter;
-            
+
             let filterString = '';
             if (brightness !== undefined) filterString += `brightness(${brightness}%) `;
             if (contrast !== undefined) filterString += `contrast(${contrast}%) `;
             if (saturation !== undefined) filterString += `saturate(${saturation}%) `;
             if (blur !== undefined) filterString += `blur(${blur}px) `;
             if (grayscale !== undefined) filterString += `grayscale(${grayscale}%) `;
-            
+
             if (filterString) {
               ctx.filter = filterString;
               ctx.drawImage(canvas, 0, 0);
@@ -142,7 +142,7 @@ const EditorPreview: React.FC = () => {
             const { width, color, style } = imageState.filters.border;
             ctx.strokeStyle = color;
             ctx.lineWidth = width;
-            
+
             if (style === 'dashed') {
               ctx.setLineDash([10, 5]);
             } else if (style === 'dotted') {
@@ -150,7 +150,7 @@ const EditorPreview: React.FC = () => {
             } else {
               ctx.setLineDash([]);
             }
-            
+
             ctx.strokeRect(width / 2, width / 2, canvas.width - width, canvas.height - width);
           }
 
@@ -162,7 +162,7 @@ const EditorPreview: React.FC = () => {
             ctx.shadowBlur = blur;
             ctx.shadowColor = color;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 0;
             ctx.shadowBlur = 0;
@@ -172,13 +172,18 @@ const EditorPreview: React.FC = () => {
           // Add text layer if it exists
           if (imageState.filters.textLayer) {
             const { text, x, y, fontSize, color, fontFamily = 'Arial', fontWeight = 'normal', textAlign = 'center' } = imageState.filters.textLayer;
-            
+
             ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
             ctx.fillStyle = color;
             ctx.textAlign = textAlign as CanvasTextAlign;
             ctx.fillText(text, x, y);
           }
 
+
+
+          ctx.strokeStyle = 'black'; // Default stroke color
+          ctx.lineWidth = 2;
+          
           ctx.restore();
         };
       }
@@ -186,8 +191,8 @@ const EditorPreview: React.FC = () => {
   }, [imageState]);
 
   return <>
-  <h2>editor preview</h2>
-  <canvas ref={canvasRef} width={500} height={500} /></>;
+    <h2>editor preview</h2>
+    <canvas ref={canvasRef} width={500} height={500} /></>;
 };
 
 export default EditorPreview;
