@@ -73,12 +73,13 @@ const EditorPreview: React.FC = () => {
         console.log("in preview", imageState);
         
         const image = new Image();
-        image.crossOrigin = "anonymous"; // Prevent CORS issues
+        // image.crossOrigin = "anonymous"; // Prevent CORS issues
         // image.src = imageState.imageData;
-        image.src = '../../../public/imgs/1.jpg';
-        // image.src = 'https://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
+        // image.src = '../../../public/imgs/1.jpg';
+        image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'
         image.onload = () => {
           ctx.save();
+console.log('*****************');
 
           // Apply transformations if they exist
           if (imageState.filters.transform) {
@@ -183,8 +184,15 @@ const EditorPreview: React.FC = () => {
           }
 
 
-
+          // console.log("ctx", ctx);
           
+          // ctx.strokeStyle = 'black';
+          // ctx.lineWidth = 5;
+          // console.log("ctx", ctx);
+          // ctx.fillText('text', 200, 200);
+
+          // ctx.strokeRect(5 / 2, 5 / 2, canvas.width - 5, canvas.height - 5);
+
 
           ctx.restore();
         };
