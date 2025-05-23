@@ -231,7 +231,6 @@ const EditorPreview: React.FC = () => {
       console.log("in preview", imageState);
       
       const image = new Image();
-      image.crossOrigin = "anonymous";
       image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
       
       image.onload = () => {
