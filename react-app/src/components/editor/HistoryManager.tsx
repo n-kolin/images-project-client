@@ -18,61 +18,61 @@
 
 // export default HistoryManager;
 
-
 "use client"
 
 import type React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { ActionCreators } from "redux-undo"
 import { StoreType } from "../../store/store"
+import { clearHistory, redo, undo } from "../../store/aiDesignSlice"
 
 const HistoryManager: React.FC = () => {
   const dispatch = useDispatch()
 
-  // גישה להיסטוריה
+  // בדיקה אם אפשר לבצע undo/redo
   const canUndo = useSelector((state: StoreType) => state.aiDesign.past.length > 0)
   const canRedo = useSelector((state: StoreType) => state.aiDesign.future.length > 0)
 
-  // גישה למצב הנוכחי לצורך הצגת מידע
-  const currentState = useSelector((state: StoreType) => state.aiDesign.present)
-
-  const handleUndo = () => {
-    dispatch(ActionCreators.undo())
-  }
-
-  const handleRedo = () => {
-    dispatch(ActionCreators.redo())
-  }
+  // מידע נוסף על ההיסטוריה
+  const pastStatesCount = useSelector((state: StoreType) => state.aiDesign.past.length)
+  const futureStatesCount = useSelector((state: StoreType) => state.aiDesign.future.length)
 
   return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">History Manager</h3>
+    <div className="p-4 border rounded-lg bg-white shadow-sm">
+      <h2 className="text-lg font-semibold mb-3">היסטוריית עריכה</h2>
 
       <div className="flex gap-2 mb-4">
         <button
-          onClick={handleUndo}
+          onClick={() => dispatch(undo())}
           disabled={!canUndo}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Undo
+          בטל (Undo)
         </button>
+
         <button
-          onClick={handleRedo}
+          onClick={() => dispatch(redo())}
           disabled={!canRedo}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Redo
+          בצע שוב (Redo)
+        </button>
+
+        <button
+          onClick={() => dispatch(clearHistory())}
+          disabled={!canUndo && !canRedo}
+          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          נקה היסטוריה
         </button>
       </div>
 
       <div className="text-sm text-gray-600">
-        <p>History: {useSelector((state: StoreType) => state.aiDesign.past.length)} past states</p>
-        <p>Future: {useSelector((state: StoreType) => state.aiDesign.future.length)} future states</p>
-        <p>Loading: {currentState.loading ? "Yes" : "No"}</p>
-        <p>Has Error: {currentState.error ? "Yes" : "No"}</p>
+        <p>מצבים קודמים: {pastStatesCount}</p>
+        <p>מצבים עתידיים: {futureStatesCount}</p>
       </div>
     </div>
   )
 }
 
 export default HistoryManager
+

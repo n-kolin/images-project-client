@@ -97,7 +97,7 @@
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import undoable, { includeAction } from 'redux-undo';
+import undoable, { includeAction, ActionCreators as UndoActionCreators } from 'redux-undo';
 // הגדרת הטיפוסים
 interface ImageFilters {
     transform?: {
@@ -306,6 +306,7 @@ export const { clearError,
     updateFilter,
     resetFilters
 } = aiDesignSlice.actions
+export const { undo, redo, clearHistory } = UndoActionCreators
 
 // ייצוא ה-undoable slice כברירת מחדל
 export default undoableAiDesignSlice

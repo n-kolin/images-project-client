@@ -211,11 +211,31 @@
 
 // components/ImageEditor/EditorPreview.tsx
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../store/store';
+import { useLocation, useNavigate } from 'react-router';
 
 const EditorPreview: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  // const imgUrl = searchParams.get('url') || '';
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  useEffect(() => {
+  searchParams.set("url", 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'); // שימוש בערך החדש
+  navigate({ search: searchParams.toString() });  
+}, []);
+  useEffect(() => {
+    console.log(imgUrl);
+    
+    const url = searchParams.get('url');
+    if (url) {
+      setImgUrl(url);
+    }
+  }, [searchParams]);
   // קבלת מצב התמונה ישירות מ-Redux
   // const { imageState } = useSelector((state: StoreType) => state.aiDesign);
   const imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
@@ -233,7 +253,9 @@ const EditorPreview: React.FC = () => {
       console.log("in preview", imageState);
       
       const image = new Image();
-      image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
+      // image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
+      image.src= imgUrl||'';
+      console.log('image.src', image.src);
       
       image.onload = () => {
         ctx.save();
@@ -344,7 +366,7 @@ const EditorPreview: React.FC = () => {
         ctx.restore();
       };
     }
-  }, [imageState]);
+  }, [imageState, imgUrl]);
 
   return (
     <>
