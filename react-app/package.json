@@ -26,6 +26,7 @@
     "react-hook-form": "^7.54.2",
     "react-redux": "^9.2.0",
     "react-router": "^7.4.0",
+    "redux-undo": "^1.1.0",
     "sweetalert2": "^11.17.2",
     "vite-plugin-checker": "^0.9.3",
     "yup": "^1.6.1"

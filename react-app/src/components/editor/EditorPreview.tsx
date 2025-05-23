@@ -217,7 +217,9 @@ import { StoreType } from '../../store/store';
 
 const EditorPreview: React.FC = () => {
   // קבלת מצב התמונה ישירות מ-Redux
-  const { imageState } = useSelector((state: StoreType) => state.aiDesign);
+  // const { imageState } = useSelector((state: StoreType) => state.aiDesign);
+  const imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

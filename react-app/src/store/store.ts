@@ -5,6 +5,7 @@ import authSlice from './authSlice';
 import foldersSlice from './foldersSlice';
 import editorAiSlice from './editorAiSlice';
 import aiDesignSlice from './aiDesignSlice';
+import undoableAiDesignSlice from './aiDesignSlice';
 
 const store = configureStore({
     reducer:
@@ -14,7 +15,7 @@ const store = configureStore({
         folders: foldersSlice.reducer,
         auth: authSlice.reducer,
         editorAi: editorAiSlice.reducer,
-        aiDesign: aiDesignSlice.reducer,
+        aiDesign: undoableAiDesignSlice,
     }
 
 });

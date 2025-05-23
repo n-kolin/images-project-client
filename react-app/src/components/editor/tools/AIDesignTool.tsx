@@ -57,7 +57,10 @@ const AIDesignTool: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   
   // קבלת מצב התמונה ישירות מ-Redux
-  const { loading, error, imageState } = useSelector((state: StoreType) => state.aiDesign);
+//   const { loading, error, imageState } = useSelector((state: StoreType) => state.aiDesign);
+const  loading = useSelector((state: StoreType) => state.aiDesign.present.loading)
+const  error = useSelector((state: StoreType) => state.aiDesign.present.error)
+const  imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
 
   // טיפול בשליחת הטופס
   const handleSubmit = (e: React.FormEvent) => {
