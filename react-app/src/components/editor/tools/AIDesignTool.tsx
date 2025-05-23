@@ -107,91 +107,73 @@
 
 // export default AIDesignTool;
 
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useImageEditorContext } from '../../../context/ImageEditorContext';
 import { AppDispatch, StoreType } from '../../../store/store';
 import { clearError, generateDesign } from '../../../store/aiDesignSlice';
 
-// טיפוס להודעת צ'אט
-interface ChatMessage {
-  id: number;
-  text: string;
-  sender: 'user' | 'ai';
-  timestamp: Date;
-  filters?: any; // האפקטים שהוחזרו מה-AI
-}
-
 const AIDesignTool: React.FC = () => {
   const [prompt, setPrompt] = useState('');
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const { imageState, setImageState } = useImageEditorContext();
+  
+  // שמירת התשובה האחרונה שטופלה כדי למנוע עיבוד כפול
+  const lastProcessedResponseRef = useRef<any>(null);
   
   // Get state from Redux
   const { loading, error, lastResponse } = useSelector((state: StoreType) => state.aiDesign);
 
-  // כאשר מתקבלת תשובה חדשה מה-API, הוסף אותה להיסטוריית הצ'אט
-  React.useEffect(() => {
-    if (lastResponse && !loading) {
-      // הוסף את תשובת ה-AI להיסטוריית הצ'אט
-      setChatHistory(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          text: lastResponse.message || 'שינויים הוחלו בהצלחה',
-          sender: 'ai',
-          timestamp: new Date(),
-          filters: lastResponse.filters
-        }
-      ]);
-    }
-  }, [lastResponse, loading]);
-
-  // פונקציה להחלת האפקטים מהודעת צ'אט ספציפית
-  const applyFiltersFromMessage = (message: ChatMessage) => {
-    if (!message.filters) return;
-    
-    // עדכון ה-state בצורה בטוחה
-    setImageState(prevState => {
-      const newFilters = { ...prevState.filters };
+  // Handle API response - עדכון אוטומטי מיד כשמגיעה תשובה
+  useEffect(() => {
+    // בדוק אם יש תשובה חדשה שלא טופלה עדיין
+    if (
+      lastResponse && 
+      lastResponse.filters && 
+      lastResponse !== lastProcessedResponseRef.current
+    ) {
+      console.log('New AI response received:', lastResponse);
       
-      // עיבוד כל מפתח בתשובת ה-AI
-      Object.keys(message.filters).forEach(key => {
-        if (!newFilters[key]) {
-          newFilters[key] = message.filters[key];
-        } else {
-          newFilters[key] = {
-            ...newFilters[key],
-            ...message.filters[key]
-          };
-        }
+      // סמן את התשובה כמטופלת
+      lastProcessedResponseRef.current = lastResponse;
+      
+      // עדכן את ה-state מיד - בצורה בטוחה שמונעת לולאה
+      setImageState(prevState => {
+        console.log('Updating state with new filters');
+        const newFilters = { ...prevState.filters };
+        
+        // עיבוד כל מפתח בתשובת ה-AI
+        Object.keys(lastResponse.filters).forEach(key => {
+          if (!newFilters[key]) {
+            // אם המפתח לא קיים, הוסף אותו
+            newFilters[key] = lastResponse.filters[key];
+            console.log(`Added new filter: ${key}`, lastResponse.filters[key]);
+          } else {
+            // אם המפתח קיים, מזג את הערכים
+            newFilters[key] = {
+              ...newFilters[key],
+              ...lastResponse.filters[key]
+            };
+            console.log(`Updated existing filter: ${key}`, newFilters[key]);
+          }
+        });
+        
+        return {
+          ...prevState,
+          filters: newFilters
+        };
       });
       
-      return {
-        ...prevState,
-        filters: newFilters
-      };
-    });
-    
-    console.log('Applied filters from message:', message.text);
-  };
+      console.log('State updated successfully');
+    }
+  }, [lastResponse, setImageState]); // רק lastResponse ו-setImageState כתלויות
 
-  // טיפול בשליחת הודעה חדשה
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
     
-    // הוסף את הודעת המשתמש להיסטוריית הצ'אט
-    const newUserMessage: ChatMessage = {
-      id: Date.now(),
-      text: prompt,
-      sender: 'user',
-      timestamp: new Date()
-    };
-    
-    setChatHistory(prev => [...prev, newUserMessage]);
+    console.log('Submitting prompt:', prompt);
     
     // Clear previous errors
     dispatch(clearError());
@@ -209,119 +191,81 @@ const AIDesignTool: React.FC = () => {
       }
     };
     
+    console.log('Sending request to AI:', request);
+    
     // Send the request
     dispatch(generateDesign(request));
     
-    // נקה את שדה הקלט
+    // נקה את שדה הקלט אחרי השליחה
     setPrompt('');
   };
 
   return (
     <div style={{ marginBottom: '20px' }}>
-      <h3>AI Design Chat</h3>
-      
-      {/* היסטוריית הצ'אט */}
-      <div 
-        style={{ 
-          height: '300px', 
-          overflowY: 'auto', 
-          border: '1px solid #ddd', 
-          borderRadius: '4px',
-          padding: '10px',
-          marginBottom: '10px',
-          backgroundColor: '#f9f9f9'
-        }}
-      >
-        {chatHistory.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#888', marginTop: '120px' }}>
-            התחל שיחה עם ה-AI כדי לעצב את התמונה שלך
-          </div>
-        ) : (
-          chatHistory.map(message => (
-            <div 
-              key={message.id}
-              style={{
-                marginBottom: '10px',
-                textAlign: message.sender === 'user' ? 'right' : 'left'
-              }}
-            >
-              <div
-                style={{
-                  display: 'inline-block',
-                  maxWidth: '80%',
-                  padding: '8px 12px',
-                  borderRadius: '12px',
-                  backgroundColor: message.sender === 'user' ? '#e1f5fe' : '#f0f4c3',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-                }}
-              >
-                <div style={{ marginBottom: '4px' }}>{message.text}</div>
-                <div style={{ fontSize: '10px', color: '#888' }}>
-                  {message.timestamp.toLocaleTimeString()}
-                </div>
-                
-                {/* כפתור להחלת האפקטים אם זו הודעת AI עם אפקטים */}
-                {message.sender === 'ai' && message.filters && (
-                  <button
-                    onClick={() => applyFiltersFromMessage(message)}
-                    style={{
-                      marginTop: '5px',
-                      padding: '4px 8px',
-                      fontSize: '12px',
-                      backgroundColor: '#4CAF50',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    החל אפקטים
-                  </button>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-      
-      {/* טופס שליחת הודעה */}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
-        {error && (
-          <div style={{ color: 'red', marginBottom: '10px' }}>
-            {error}
-          </div>
-        )}
-        
-        <div style={{ display: 'flex' }}>
+      <h3>AI Design Tool</h3>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '10px' }}>
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="תאר את השינויים שאתה רוצה (לדוגמה: 'הוסף מסגרת ורודה דקה')"
             style={{ 
-              flex: 1, 
-              minHeight: '60px', 
+              width: '100%', 
+              minHeight: '80px', 
               padding: '8px',
-              borderRadius: '4px 0 0 4px',
+              borderRadius: '4px',
               border: '1px solid #ddd',
-              borderRight: 'none'
+              fontSize: '14px'
             }}
           />
-          <button 
-            type="submit" 
-            disabled={loading || !prompt.trim()}
-            style={{ 
-              padding: '8px 16px', 
-              backgroundColor: loading ? '#ccc' : '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0 4px 4px 0',
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
-          >
-            {loading ? 'מעבד...' : 'שלח'}
-          </button>
         </div>
+        
+        {error && (
+          <div style={{ 
+            color: 'red', 
+            marginBottom: '10px',
+            padding: '8px',
+            backgroundColor: '#ffebee',
+            borderRadius: '4px',
+            border: '1px solid #ffcdd2'
+          }}>
+            {error}
+          </div>
+        )}
+        
+        {loading && (
+          <div style={{ 
+            color: '#1976d2', 
+            marginBottom: '10px',
+            padding: '8px',
+            backgroundColor: '#e3f2fd',
+            borderRadius: '4px',
+            border: '1px solid #bbdefb'
+          }}>
+            מעבד את הבקשה... אנא המתן
+          </div>
+        )}
+        
+        <button 
+          type="submit" 
+          disabled={loading || !prompt.trim()}
+          style={{ 
+            padding: '10px 20px', 
+            backgroundColor: loading ? '#ccc' : '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            width: '100%'
+          }}
+        >
+          {loading ? 'מעבד...' : 'החל עיצוב'}
+        </button>
       </form>
+      
+     
     </div>
   );
 };
