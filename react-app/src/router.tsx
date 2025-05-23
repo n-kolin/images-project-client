@@ -17,15 +17,15 @@ export const router = createHashRouter([
         path: '/',
         element:
         
-          // <AppLayout/> ,
-          <ImageEditor />,
+          <AppLayout/> ,
+        //   <ImageEditor />, /netfree
         children: [
             { path: 'update', element: <Update/>, },
             { path: 'about', element: <About/>, },
             { path: '/', element: <About/>, },
             { path: 'upload', element: <UploadImage /> },
             { path: 'all-files', element: <AllFiles /> },
-            { path: 'editor-cop-1205', element: <ImageEditor /> },
+            // { path: 'editor-cop-1205', element: <ImageEditor /> },
             { path: 'frame', element: 
             // <Gallery /> 
             <Canvas />
@@ -38,7 +38,7 @@ export const router = createHashRouter([
             {path:'gpt-test',element:
                 // <ImageEditorProvider>
 
-            <ImageEditor/>
+            // <ImageEditor/> netfree
               //  </ImageEditorProvider>
         }
 
