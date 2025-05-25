@@ -22,8 +22,8 @@
 
 import type React from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { undo, redo, clearHistory } from "../store/ai-design-slice"
 import { StoreType } from "../../store/store"
-import { clearHistory, redo, undo } from "../../store/aiDesignSlice"
 
 const HistoryManager: React.FC = () => {
   const dispatch = useDispatch()

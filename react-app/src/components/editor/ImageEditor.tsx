@@ -66,7 +66,7 @@ const ImageEditor: React.FC = () => {
             <TextTool />
             <BackgroundTool />
           </div> */}
-          <HistoryManager />
+          {/* <HistoryManager /> */}
         </div>
      </ImageEditorProvider>
   );

@@ -22,7 +22,6 @@ const About = () => {
                 <Box
                     sx={{
                         m: 0,
-                        mt: 25,
                         position: 'relative',
                         width: '100%',
                         height: '550px',

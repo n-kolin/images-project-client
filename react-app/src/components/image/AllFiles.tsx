@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, StoreType } from "../../store/store";
 import { Box, Button, Grid2, IconButton, TextField, Typography } from "@mui/material";
 import ImgCard from "./ImgCard";
-import { FileType } from "../../types/FileType";
 import { getChildFiles, getFilesByUser } from "../../store/filesSlice";
 import { addNewFolder, clearSelectedFolder, deleteFolder, getFolderById } from "../../store/foldersSlice";
 import { useNavigate } from "react-router";
@@ -12,7 +11,6 @@ import FolderCard from "./FolderCard";
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice";
 import { FolderType } from "../../types/FolderType";
 import { Add, ArrowBack, ArrowBackIosNewRounded, ArrowUpward, Cancel, CreateNewFolder, FolderOpen } from "@mui/icons-material";
-import DotLoader from "../DotLoader";
 import Loading from "../Loading";
 
 const AllFiles = () => {

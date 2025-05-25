@@ -7,6 +7,7 @@ import Download from '../file/Download';
 import DeleteFile from '../file/DeleteFile';
 import apiClient from '../../apiClient';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 
 const ImgCard = ({ userId, path, name, id }: { userId: number, path: string, name: string, id: number }) => {
@@ -25,9 +26,9 @@ const ImgCard = ({ userId, path, name, id }: { userId: number, path: string, nam
           userId,
           path: path + (path!=='/'?  '/':'' )+ name,
         },
-      });
-      console.log(response);
-
+      })
+      console.log(userId, path + (path!=='/'?  '/':'' )+ name);
+      
       setUrl(response.data.url);
       console.log(url);
 
@@ -37,6 +38,18 @@ const ImgCard = ({ userId, path, name, id }: { userId: number, path: string, nam
     download();
   }, []);
 
+
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+
+  const handleImageClick = () => {
+
+    const imageUrl = path + (path !== '/' ? '/' : '') + name;
+      searchParams.set("url", imageUrl); 
+      navigate(`/edit?${searchParams.toString()}`);
+
+  
+  };
 
   return (
     <>
@@ -64,6 +77,7 @@ const ImgCard = ({ userId, path, name, id }: { userId: number, path: string, nam
           <img
             src={url}
             alt="img"
+            onClick={handleImageClick}
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />
           <Typography variant="body1" component="div" noWrap sx={{ textAlign: 'center', marginTop: '10px' }}>

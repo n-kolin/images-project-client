@@ -20,9 +20,7 @@ const Menu = () => {
         <AppBar position="fixed" sx={{ backgroundColor: 'primary', paddingBottom: 2, paddingTop: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ marginLeft: 2, p: 2 }}>
-
                     <Auth />
-
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
                     <Link to='/' style={tabStyle}>
@@ -42,6 +40,12 @@ const Menu = () => {
                     {currentUser &&
                         <Link to='/all-files' style={tabStyle}>
                             <Typography variant="h6" >all files</Typography>
+                        </Link>
+                    }
+                    {currentUser &&
+                    //  (currentUser.role === 'Admin') &&
+                        <Link to='https://image-editor-manager.onrender.com' style={tabStyle}>
+                            <Typography variant="h6" >manager</Typography>
                         </Link>
                     }
                 </Box>

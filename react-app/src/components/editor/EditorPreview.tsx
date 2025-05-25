@@ -215,30 +215,80 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../store/store';
 import { useLocation, useNavigate } from 'react-router';
+import apiClient from '../../apiClient';
+import { IconButton } from '@mui/material';
+import { SaveAltRounded } from '@mui/icons-material';
 
 const EditorPreview: React.FC = () => {
+
+  const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
 
   const navigate = useNavigate();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   // const imgUrl = searchParams.get('url') || '';
-  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [path, setPath] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
+
   useEffect(() => {
-  searchParams.set("url", 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740'); // שימוש בערך החדש
-  navigate({ search: searchParams.toString() });  
-}, []);
-  useEffect(() => {
-    console.log(imgUrl);
-    
-    const url = searchParams.get('url');
-    if (url) {
-      setImgUrl(url);
+
+    console.log('1');
+
+    const u = searchParams.get('url');
+    if (u) {
+      setPath(u);
     }
+
+
   }, [searchParams]);
+
+
+  useEffect(() => {
+    const download = async () => {
+
+      console.log('2', currentUser, path);
+
+
+      const response = await apiClient.get('file/download-url', {
+        params: {
+          userId: currentUser?.id,
+          path: path
+        },
+      }).then((res) => {
+        console.log('444', res.data);
+        setUrl(res.data.url);
+
+      });
+      console.log(response);
+
+    };
+    if (path ) {
+      download();
+    }
+  }, [path]);
+
+  const downloadImage = () => {
+    const canvas = canvasRef.current
+    if (canvas) {
+      // יצירת data URL מה-canvas
+      const dataURL = canvas.toDataURL("image/png", 1.0)
+
+      // יצירת קישור הורדה
+      const link = document.createElement("a")
+      link.download = `edited-image-${Date.now()}.png`
+      link.href = dataURL
+
+      // הפעלת ההורדה
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
   // קבלת מצב התמונה ישירות מ-Redux
-  // const { imageState } = useSelector((state: StoreType) => state.aiDesign);
-  const imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
+  const { imageState } = useSelector((state: StoreType) => state.aiDesign);
+  // const imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -251,12 +301,16 @@ const EditorPreview: React.FC = () => {
 
       // ציור התמונה
       console.log("in preview", imageState);
-      
+
       const image = new Image();
       // image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
-      image.src= imgUrl||'';
+      image.crossOrigin = "anonymous"
+
+      image.src = url || '';
+      console.log('url', url);
+
+
       console.log('image.src', image.src);
-      
       image.onload = () => {
         ctx.save();
         console.log('*****************');
@@ -366,12 +420,15 @@ const EditorPreview: React.FC = () => {
         ctx.restore();
       };
     }
-  }, [imageState, imgUrl]);
+  }, [imageState, path, url]);
 
   return (
     <>
       <h2>Editor Preview</h2>
       <canvas ref={canvasRef} width={500} height={500} />
+      <IconButton size="small" onClick={downloadImage}>
+        <SaveAltRounded />
+      </IconButton>
     </>
   );
 };
