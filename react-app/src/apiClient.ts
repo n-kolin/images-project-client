@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://images-editor-server.onrender.com/api/', 
+    baseURL: 'https://images-editor-server.onrender.com/api/', 
 });
 
 apiClient.interceptors.request.use(
