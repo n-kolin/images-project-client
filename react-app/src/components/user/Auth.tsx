@@ -1,91 +1,107 @@
-import { useState } from 'react';
-import { Modal, Box, Button } from '@mui/material';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import { modalStyle, styleButton } from '../../styles/ModalStyle';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, StoreType } from '../../store/store';
-import { clearCurrentUser } from '../../store/authSlice';
-import { useNavigate } from 'react-router';
+"use client"
+
+import { useState } from "react"
+import { Modal, Box, Button } from "@mui/material"
+import SignIn from "./SignIn"
+import SignUp from "./SignUp"
+import { modalStyle } from "../../styles/ModalStyle"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, StoreType } from "../../store/store"
+import { clearCurrentUser } from "../../store/authSlice"
+import { useNavigate } from "react-router"
+import { LogIn, UserPlus, LogOut, Settings } from "lucide-react"
+import "../../css/Auth.css"
 
 const Auth = () => {
-    const [open, setOpen] = useState(false);
-    const [isSignIn, setIsSignIn] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [isSignIn, setIsSignIn] = useState(false)
 
-    const handleClose = () => setOpen(false);
-    const toggleForm = () => setIsSignIn(!isSignIn);
+  const handleClose = () => setOpen(false)
+  const toggleForm = () => setIsSignIn(!isSignIn)
 
+  const handleSuccess = () => {
+    setOpen(false)
+  }
 
-    const handleSuccess = () => {
-        setOpen(false);
-    }
+  //log out
+  const dispatch = useDispatch<AppDispatch>()
 
-    //log out
-    const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate()
+  const signOut = () => {
+    navigate("/") // ניתוב לעמוד הראשי
+    dispatch(clearCurrentUser())
+    sessionStorage.removeItem("accessToken")
+  }
 
-    const navigate = useNavigate();
-    const signOut = () => {
-        navigate('/'); // ניתוב לעמוד הראשי
-        dispatch(clearCurrentUser())
-        sessionStorage.removeItem('accessToken');
-    }
+  //current user
+  const currentUser = useSelector((state: StoreType) => state.auth.currentUser)
 
+  const update = () => {
+    navigate("/update")
+  }
 
-    //current user
-    const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
+  return (
+    <div className="auth-wrapper">
+      {!currentUser ? (
+        <>
+          <Button
+            className="auth-styled-button"
+            onClick={() => {
+              setOpen(true)
+              setIsSignIn(true)
+            }}
+          >
+            <LogIn size={16} className="auth-button-icon" />
+            <span className="auth-button-text">Sign In</span>
+            <div className="auth-button-underline"></div>
+          </Button>
 
+          <Button
+            className="auth-styled-button"
+            onClick={() => {
+              setOpen(true)
+              setIsSignIn(false)
+            }}
+          >
+            <UserPlus size={16} className="auth-button-icon" />
+            <span className="auth-button-text">Sign Up</span>
+            <div className="auth-button-underline"></div>
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button
+            className="auth-styled-button"
+            onClick={() => {
+              signOut()
+            }}
+          >
+            <LogOut size={16} className="auth-button-icon" />
+            <span className="auth-button-text">Sign Out</span>
+            <div className="auth-button-underline"></div>
+          </Button>
+          {/* <Update /> */}
 
+          <Button
+            className="auth-styled-button"
+            onClick={() => {
+              update()
+            }}
+          >
+            <Settings size={16} className="auth-button-icon" />
+            <span className="auth-button-text">Update</span>
+            <div className="auth-button-underline"></div>
+          </Button>
+        </>
+      )}
 
-
-    const update = () => {
-        navigate('/update')
-    }
-
-    return (
-        <div>
-
-            {!currentUser ? (
-                <>
-                    <Button sx={styleButton} onClick={() => {
-                        setOpen(true);
-                        setIsSignIn(true)
-                    }}>
-                        sign in
-                    </Button>
-
-
-                    <Button sx={styleButton} onClick={() => {
-                        setOpen(true);
-                        setIsSignIn(false)
-                    }}>
-                        sign up
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <Button sx={styleButton} onClick={() => {
-                        signOut();
-                    }}>
-                        sign out
-                    </Button>
-                    {/* <Update /> */}
-
-                    <Button sx={styleButton} onClick={() => {
-                        update();
-                    }}>
-                        update
-                    </Button>
-                </>
-
-            )
-            }
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="auth-modal-title"
-                aria-describedby="auth-modal-description"
-            >
-                {/* 
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="auth-modal-title"
+        aria-describedby="auth-modal-description"
+      >
+        {/* 
                 X
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <Button
@@ -107,23 +123,26 @@ const Auth = () => {
                 
                 
                 */}
-                <Box sx={modalStyle}>
-                    {isSignIn ? (
-                        <div>
-                            <p>Don't have an account? <Button onClick={toggleForm}>Sign Up</Button></p>
-                            <SignIn onSuccess={handleSuccess} />
-                        </div>
-                    ) : (
-                        <div>
-                            <p>Already have an account? <Button onClick={toggleForm}>Sign In</Button></p>
-                            <SignUp onSuccess={handleSuccess} />
-                        </div>
-                    )}
-                </Box>
-            </Modal>
-        </div>
-    );
-};
+        <Box sx={modalStyle}>
+          {isSignIn ? (
+            <div>
+              <SignIn onSuccess={handleSuccess} />
+              <p>
+                Don't have an account? <Button onClick={toggleForm}>Sign Up</Button>
+              </p>
+            </div>
+          ) : (
+            <div>
+              <SignUp onSuccess={handleSuccess} />
+              <p>
+                Already have an account? <Button onClick={toggleForm}>Sign In</Button>
+              </p>
+            </div>
+          )}
+        </Box>
+      </Modal>
+    </div>
+  )
+}
 
-
-export default Auth;
+export default Auth

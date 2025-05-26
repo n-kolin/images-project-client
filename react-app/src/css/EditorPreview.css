@@ -1,0 +1,90 @@
+/* Image Canvas Container */
+.image-canvas-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 100px;
+  }
+  
+  /* Download Icon Positioning - Subtle and Gentle */
+  .download-icon {
+    position: absolute !important;
+    top: 10px !important;
+    left: -70px !important;
+    background: rgba(248, 250, 252, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(148, 163, 184, 0.3) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+    transition: all 0.4s ease !important;
+    z-index: 10 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    animation: gentleFloat 4s ease-in-out infinite !important;
+  }
+  
+  .download-icon:hover {
+    background: rgba(241, 245, 249, 0.98) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .download-icon svg {
+    color: #64748b !important;
+    transition: all 0.4s ease !important;
+    opacity: 1 !important;
+    font-size: 1.2rem !important;
+  }
+  
+  .download-icon:hover svg {
+    color: #8b5cf6 !important;
+    transform: scale(1.1) !important;
+  }
+  
+  /* Gentle Float Animation - Up and Down */
+  @keyframes gentleFloat {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Remove glow effect */
+  .download-icon::before {
+    display: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .download-icon {
+      left: -12px !important;
+      top: 8px !important;
+      width: 36px !important;
+      height: 36px !important;
+    }
+  
+    .download-icon svg {
+      font-size: 1.1rem !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .download-icon {
+      left: -10px !important;
+      top: 5px !important;
+      width: 32px !important;
+      height: 32px !important;
+    }
+  
+    .download-icon svg {
+      font-size: 1rem !important;
+    }
+  }
+  

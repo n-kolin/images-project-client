@@ -1,200 +1,162 @@
+"use client"
+
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
-import {  SubmitHandler, useForm } from "react-hook-form"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import { object, string } from "yup"
-import {  PersonAdd, Person, Email, VisibilityOff, Visibility } from "@mui/icons-material";
-import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Modal, OutlinedInput, Radio, RadioGroup, TextField, Typography } from "@mui/material"
+import { PersonAdd, Person, Email, VisibilityOff, Visibility } from "@mui/icons-material"
 import { modalStyle } from "../../styles/ModalStyle"
 
-import { LoginType, UserType } from "../../types/UserType";
+import type { UserType } from "../../types/UserType"
 
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, StoreType } from "../../store/store"
+import { registration } from "../../store/usersSlice"
+import { setCurrentUser } from "../../store/authSlice"
+import Swal from "sweetalert2"
+import DotLoader from "../DotLoader"
+import "../../css/AuthForms.css"
 
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, StoreType } from "../../store/store";
-import usersSlice, { login, registration } from "../../store/usersSlice";
-import { setCurrentUser } from "../../store/authSlice";
-import Swal from "sweetalert2";
-import Loading from "../Loading";
-import DotLoader from "../DotLoader";
-const SignUp = ({onSuccess}:{onSuccess:()=>void}) => {
+const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
+  const loading = useSelector((state: StoreType) => state.users.loading)
 
-    const loading = useSelector((state: StoreType) => state.users.loading);
+  //pass
+  const [showPassword, setShowPassword] = useState(false)
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
 
+  const UserSchema = object({
+    name: string().required().min(3),
+    email: string().email().required(),
+    password: string().required().min(6).max(25),
+  })
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(UserSchema),
+  })
 
-    //pass
-    const [showPassword, setShowPassword] = useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const style = modalStyle
 
-    const UserSchema = object({
-        name: string().required().min(3),
-        email: string().email().required(),
-        password: string().required().min(6).max(25),
-    })
+  //register
+  const dispatch = useDispatch<AppDispatch>()
 
-    const {
-        control,
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-        reset
-    } = useForm({
-        
-        resolver: yupResolver(UserSchema)
-    })
-
-    const style = modalStyle;
-
-
-    //register
-    const dispatch = useDispatch<AppDispatch>();
-
-
-    const onSubmit: SubmitHandler<UserType> = async (data) => {
-        
-        const newUser:Partial<UserType>={
-            name:data.name,
-            email:data.email,
-            password:data.password,
-            role:'User',
-        }
-
-        const res = await dispatch(registration(newUser))
-
-        console.log(res);
-        
-        if (res.meta.requestStatus === 'fulfilled') {
-            console.log('jjg');
-            console.log(res);
-            dispatch(setCurrentUser(res.payload.userDto));
-            sessionStorage.setItem("accessToken", res.payload.token)
-            console.log('ghj');
-            onSuccess();
-           
-
-
-
-        }
-        else {
-
-            //not success
-            onSuccess();
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: res.payload.response.data || 'login failed',
-            });
-
-        }
-
-        
-        
-
+  const onSubmit: SubmitHandler<UserType> = async (data) => {
+    const newUser: Partial<UserType> = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: "User",
     }
 
+    const res = await dispatch(registration(newUser))
 
-    return (
-        <>
-            {loading && 'ssssss'}
+    console.log(res)
 
-            <Box sx={style}>
+    if (res.meta.requestStatus === "fulfilled") {
+      console.log("jjg")
+      console.log(res)
+      dispatch(setCurrentUser(res.payload.userDto))
+      sessionStorage.setItem("accessToken", res.payload.token)
+      console.log("ghj")
+      onSuccess()
+    } else {
+      //not success
+      onSuccess()
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: res.payload.response.data || "login failed",
+      })
+    }
+  }
 
-                <Typography variant="h6" component="h2" sx={{ mb: 2, color: 'secondary.dark' }}>
-                    <PersonAdd /> Sign Up
-                </Typography>
+  return (
+    <>
+      {loading && "ssssss"}
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl sx={{ m: 2, width: '25ch' }} >
-                        <InputLabel htmlFor="name" error={errors.name !== undefined}>Name</InputLabel>
-                        <OutlinedInput
-                            id="name"
-                            label="name"
-                            {...register('name')}
-                            error={errors.name !== undefined}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Person sx={{ color: 'gray' }} />
-                                </InputAdornment>
-                            }
-                        />
-                        <FormHelperText error>{errors.name?.message}</FormHelperText>
-                    </FormControl>
+      <div className="auth-modal-box auth-signup-form">
+        <h2 className="auth-modal-title">
+          <PersonAdd /> Sign Up
+        </h2>
 
-                    <FormControl sx={{ m: 2, width: '25ch' }} >
-                        <InputLabel htmlFor="email" error={errors.email !== undefined}>Email</InputLabel>
-                        <OutlinedInput
-                            id="email"
-                            label="email"
-                            {...register('email')}
-                            error={errors.email !== undefined}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <Email sx={{ color: 'gray' }} />
-                                </InputAdornment>
-                            }
-                        />
-                        <FormHelperText error>{errors.email?.message}</FormHelperText>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="auth-form-control">
+            <label htmlFor="name" className={`auth-input-label ${errors.name !== undefined ? "error" : ""}`}>
+              Name
+            </label>
+            <div className="auth-input-container">
+              <div className="auth-input-adornment">
+                <Person className="auth-input-icon" />
+              </div>
+              <input
+                id="name"
+                className={`auth-outlined-input ${errors.name !== undefined ? "error" : ""}`}
+                {...register("name")}
+              />
+            </div>
+            <span className={`auth-helper-text ${errors.name ? "error" : ""}`}>{errors.name?.message}</span>
+          </div>
 
-                    </FormControl>
+          <div className="auth-form-control">
+            <label htmlFor="email" className={`auth-input-label ${errors.email !== undefined ? "error" : ""}`}>
+              Email
+            </label>
+            <div className="auth-input-container">
+              <div className="auth-input-adornment">
+                <Email className="auth-input-icon" />
+              </div>
+              <input
+                id="email"
+                className={`auth-outlined-input ${errors.email !== undefined ? "error" : ""}`}
+                {...register("email")}
+              />
+            </div>
+            <span className={`auth-helper-text ${errors.email ? "error" : ""}`}>{errors.email?.message}</span>
+          </div>
 
+          <div className="auth-form-control">
+            <label htmlFor="password" className={`auth-input-label ${errors.password !== undefined ? "error" : ""}`}>
+              Password
+            </label>
+            <div className="auth-input-container">
+              <div className="auth-input-adornment">
+                <button
+                  type="button"
+                  className="auth-icon-button"
+                  aria-label={showPassword ? "hide the password" : "display the password"}
+                  onClick={handleClickShowPassword}
+                  //   onMouseDown={handleMouseDownPassword}
+                  //   onMouseUp={handleMouseUpPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </button>
+              </div>
+              <input
+                id="password"
+                className={`auth-outlined-input ${errors.password !== undefined ? "error" : ""}`}
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
+              />
+            </div>
+            <span className={`auth-helper-text ${errors.password ? "error" : ""}`}>{errors.password?.message}</span>
+          </div>
 
+          <div>
+            <button type="submit" className="auth-submit-button">
+              Submit
+            </button>
+          </div>
 
-
-                    <FormControl sx={{ m: 2, width: '25ch' }} variant="outlined">
-                        <InputLabel htmlFor="password" error={errors.password !== undefined}>Password</InputLabel>
-                        <OutlinedInput
-                            id="password"
-                            label="password"
-                            {...register('password')}
-                            error={errors.password !== undefined}
-                            type={showPassword ? 'text' : 'password'}
-                            startAdornment={
-                                <InputAdornment position="start">
-                                    <IconButton
-                                        aria-label={
-                                            showPassword ? 'hide the password' : 'display the password'
-                                        }
-                                        onClick={handleClickShowPassword}
-                                        //   onMouseDown={handleMouseDownPassword}
-                                        //   onMouseUp={handleMouseUpPassword}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                        <FormHelperText error>{errors.password?.message}</FormHelperText>
-
-                    </FormControl>
-
-
-
-                    <div>
-                        <Button type="submit" sx={{
-                            bgcolor: 'primary.dark', color: '#000', '&:hover': {
-                                backgroundColor: 'primary.main'
-                            }
-                        }}>
-                            Submit
-                        </Button></div>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>
-                        {loading && <DotLoader />}
-                    </Box>
-                 
-
-                    
-                </form>
-            </Box>
-
-
-
-
-
-
-        </>
-    )
+          <div className="auth-loading-container">{loading && <DotLoader />}</div>
+        </form>
+      </div>
+    </>
+  )
 }
 export default SignUp

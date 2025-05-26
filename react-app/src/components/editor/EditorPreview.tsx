@@ -218,6 +218,7 @@ import { useLocation, useNavigate } from 'react-router';
 import apiClient from '../../apiClient';
 import { IconButton } from '@mui/material';
 import { SaveAltRounded } from '@mui/icons-material';
+import "../../css/EditorPreview.css"
 
 const EditorPreview: React.FC = () => {
 
@@ -303,14 +304,15 @@ const EditorPreview: React.FC = () => {
       console.log("in preview", imageState);
 
       const image = new Image();
-      // image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
-      image.crossOrigin = "anonymous"
+      image.src = 'http://img.freepik.com/free-photo/bonifacio-lighthouse_181624-5126.jpg?uid=R150112249&ga=GA1.1.1129303057.1731009829&semt=ais_hybrid&w=740';
+      // image.crossOrigin = "anonymous"
 
-      image.src = url || '';
+      // image.src = url || '';
       console.log('url', url);
 
 
       console.log('image.src', image.src);
+      
       image.onload = () => {
         ctx.save();
         console.log('*****************');
@@ -424,11 +426,12 @@ const EditorPreview: React.FC = () => {
 
   return (
     <>
-      <h2>Editor Preview</h2>
-      <canvas ref={canvasRef} width={500} height={500} />
-      <IconButton size="small" onClick={downloadImage}>
-        <SaveAltRounded />
-      </IconButton>
+      <div className="image-canvas-container">
+        <canvas ref={canvasRef} width={500} height={500} />
+        <IconButton size="small" onClick={downloadImage} className="download-icon">
+          <SaveAltRounded />
+        </IconButton>
+      </div>
     </>
   );
 };

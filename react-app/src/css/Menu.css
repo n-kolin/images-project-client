@@ -1,0 +1,428 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* Modern Header Base - Original Style */
+.modern-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.95) 0%,
+    rgba(168, 85, 247, 0.95) 50%,
+    rgba(236, 72, 153, 0.95) 100%
+  );
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Animated Background - Original */
+.bg-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.shape-1 {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 40px;
+  height: 40px;
+  top: -20px;
+  right: 20%;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  width: 80px;
+  height: 80px;
+  bottom: -40px;
+  left: 60%;
+  animation-delay: 4s;
+}
+
+.shape-4 {
+  width: 50px;
+  height: 50px;
+  bottom: -25px;
+  right: 10%;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(10px) rotate(240deg);
+  }
+}
+
+/* Header Content */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo Section - Original with Image */
+.logo-container {
+  flex: 0 0 auto;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logo-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(45deg, #fff, rgba(255, 255, 255, 0.8));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-icon::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.logo-wrapper:hover .logo-icon::before {
+  left: 100%;
+}
+
+.logo-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-inner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(45deg, #6366f1, #a855f7);
+  border-radius: 4px;
+  animation: pulse 2s infinite;
+  opacity: 0.3;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.logo-text {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  font-family: "Inter", sans-serif;
+}
+
+.logo-main {
+  color: #fff;
+}
+
+.logo-accent {
+  background: linear-gradient(45deg, #a78bfa, #c4b5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced Standard Navigation */
+.main-navigation {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav-item {
+  position: relative;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-icon {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  z-index: 3;
+  position: relative;
+}
+
+.nav-text {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
+}
+
+.nav-underline {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  border-radius: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.nav-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(168, 85, 247, 0.1));
+  border-radius: 25px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: scale(0.95);
+  z-index: 1;
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(196, 181, 253, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+  transition: all 0.6s ease;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.nav-item:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nav-item:hover::after {
+  width: 100px;
+  height: 100px;
+}
+
+.nav-item:hover {
+  transform: translateY(-3px);
+  box-shadow: none;
+  background: transparent;
+  border: none;
+}
+
+.nav-item:hover .nav-underline {
+  width: 60%;
+}
+
+.nav-item:hover .nav-text {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+.nav-item:hover .nav-icon {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.nav-item:active {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+}
+
+/* Auth Section - Seamless Integration */
+.auth-container {
+  flex: 0 0 auto;
+}
+
+/* Remove auth-wrapper styles to make it seamless */
+.auth-wrapper {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  transition: none !important;
+}
+
+.auth-wrapper:hover {
+  background: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .header-content {
+    padding: 0 1.5rem;
+  }
+
+  .nav-container {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .nav-item {
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-header {
+    height: auto;
+    min-height: 80px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+  }
+
+  .floating-shape {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .nav-item {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .logo-wrapper {
+    gap: 0.5rem;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Body adjustment for fixed header */
+body {
+  margin-top: 80px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (max-width: 768px) {
+  body {
+    margin-top: 120px;
+  }
+}
+
+/* Additional Visual Effects - Original */
+.modern-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+  opacity: 0.5;
+}

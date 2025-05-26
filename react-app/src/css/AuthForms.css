@@ -1,0 +1,277 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+/* Auth Modal Box - No Background, Pure Content */
+.auth-modal-box {
+  width: 100%;
+  max-width: 360px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* SignIn Form - Extra space at top */
+.auth-signin-form {
+  justify-content: flex-end;
+}
+
+/* SignUp Form - Normal spacing */
+.auth-signup-form {
+  justify-content: space-between;
+}
+
+/* Auth Modal Title - Minimal */
+.auth-modal-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.auth-modal-title svg {
+  color: #8b5cf6 !important;
+  font-size: 1.25rem !important;
+}
+
+/* Form Control - Clean Layout */
+.auth-form-control {
+  margin: 0.5rem 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Special spacing for SignIn email field */
+.auth-signin-form .auth-form-control:first-of-type {
+  margin-top: 4.5rem; /* Height of one input + label + spacing */
+}
+
+/* Input Label - Minimal */
+.auth-input-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.125rem;
+  transition: color 0.2s ease;
+  letter-spacing: 0.01em;
+}
+
+.auth-input-label.error {
+  color: #ef4444;
+}
+
+/* Input Container */
+.auth-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Input Adornment - Subtle */
+.auth-input-adornment {
+  position: absolute;
+  left: 0.875rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.auth-input-icon {
+  color: #d1d5db !important;
+  font-size: 1rem !important;
+  transition: all 0.2s ease;
+}
+
+/* Icon Button for Password - Minimal */
+.auth-icon-button {
+  position: absolute;
+  left: 0.875rem;
+  background: none;
+  border: none;
+  color: #d1d5db;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 6px;
+  z-index: 2;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.auth-icon-button:hover {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.04);
+}
+
+.auth-icon-button svg {
+  font-size: 1rem !important;
+}
+
+/* Outlined Input - Minimal and Clean */
+.auth-outlined-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 400;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  outline: none;
+  position: relative;
+  z-index: 1;
+  color: #374151;
+}
+
+.auth-outlined-input::placeholder {
+  color: #d1d5db;
+  font-weight: 300;
+}
+
+.auth-outlined-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.06);
+  background: rgba(255, 255, 255, 1);
+}
+
+.auth-outlined-input:focus ~ .auth-input-adornment .auth-input-icon {
+  color: #8b5cf6 !important;
+}
+
+.auth-outlined-input.error {
+  border-color: #fecaca;
+  background: rgba(254, 242, 242, 0.8);
+}
+
+.auth-outlined-input.error ~ .auth-input-adornment .auth-input-icon {
+  color: #ef4444 !important;
+}
+
+.auth-outlined-input:hover:not(:focus) {
+  border-color: #e5e7eb;
+  background: rgba(255, 255, 255, 1);
+}
+
+.auth-outlined-input:hover:not(:focus) ~ .auth-input-adornment .auth-input-icon {
+  color: #9ca3af !important;
+}
+
+/* Helper Text - Minimal */
+.auth-helper-text {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-top: 0.125rem;
+  min-height: 0.75rem;
+  font-weight: 400;
+}
+
+.auth-helper-text.error {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Submit Button - Minimal and Elegant */
+.auth-submit-button {
+  position: relative;
+  width: 100%;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  margin-top: 0.125rem;
+  letter-spacing: 0.01em;
+}
+
+.auth-submit-button:hover {
+  background: #7c3aed;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.auth-submit-button:active {
+  transform: translateY(0);
+}
+
+.auth-submit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Container - Minimal */
+.auth-loading-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.05rem;
+  min-height: 1.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-signin-form .auth-form-control:first-of-type {
+    margin-top: 4rem;
+  }
+
+  .auth-modal-title {
+    font-size: 1.125rem;
+  }
+
+  .auth-outlined-input {
+    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+  }
+
+  .auth-input-adornment,
+  .auth-icon-button {
+    left: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-signin-form .auth-form-control:first-of-type {
+    margin-top: 3.5rem;
+  }
+
+  .auth-outlined-input {
+    font-size: 0.8rem;
+  }
+
+  .auth-submit-button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Focus States for Accessibility */
+.auth-submit-button:focus {
+  outline: 2px solid rgba(139, 92, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.auth-outlined-input:focus {
+  outline: none;
+}
+
+.auth-icon-button:focus {
+  outline: 1px solid #8b5cf6;
+  outline-offset: 1px;
+}

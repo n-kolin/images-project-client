@@ -1,56 +1,90 @@
-import { AppBar, Box, colors, Toolbar, Typography } from "@mui/material"
 import { Link } from "react-router"
 import Auth from "./user/Auth"
-import { useSelector } from "react-redux";
-import { StoreType } from "../store/store";
+import { useSelector } from "react-redux"
+import type { StoreType } from "../store/store"
+import { Home, Info, Files, Settings } from "lucide-react"
+import "../css/Menu.css"
 
 const Menu = () => {
-    const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
+  const currentUser = useSelector((state: StoreType) => state.auth.currentUser)
 
-    const tabStyle = {
-        textDecoration: 'none',
-        border: '1px solid #92afae',
-        margin: '3px',
-        padding: '3px',
-        borderRadius: '10px',
-        paddingRight: '15px', paddingLeft: '15px', backgroundColor: '#fff'
-    }
-    return (<>
+  return (
+    <>
+      <header className="modern-header">
+        {/* Animated Background Elements */}
+        <div className="bg-animation">
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
+          <div className="floating-shape shape-4"></div>
+        </div>
 
-        <AppBar position="fixed" sx={{ backgroundColor: 'primary', paddingBottom: 2, paddingTop: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Box sx={{ marginLeft: 2, p: 2 }}>
-                    <Auth />
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2 }}>
-                    <Link to='/' style={tabStyle}>
-                        <Typography variant="h6">home</Typography>
-                    </Link>
+        <div className="header-content">
+          {/* Logo Section */}
+          <div className="logo-container">
+            <div className="logo-wrapper">
+              <div className="logo-icon">
+                <img src="/placeholder.svg?height=32&width=32" alt="Logo" className="logo-img" />
+                <div className="logo-inner"></div>
+              </div>
+              <h1 className="logo-text">
+                <span className="logo-main">My</span>
+                <span className="logo-accent">Brand</span>
+              </h1>
+            </div>
+          </div>
 
-                    <Link to='/' style={tabStyle}>
-                        <Typography variant="h6" >about</Typography>
-                    </Link>
+          {/* Navigation Menu - Enhanced Standard Style */}
+          <nav className="main-navigation">
+            <div className="nav-container">
+              <Link to="/" className="nav-item">
+                <Home size={16} className="nav-icon" />
+                <span className="nav-text">Home</span>
+                <div className="nav-underline"></div>
+              </Link>
 
-                    {/* {
+              <Link to="/" className="nav-item">
+                <Info size={16} className="nav-icon" />
+                <span className="nav-text">About</span>
+                <div className="nav-underline"></div>
+              </Link>
+
+              {/* {
                         currentUser &&
-                        <Link to='/upload' style={tabStyle}>
-                            <Typography variant="h6" >upload file</Typography>
+                        <Link to='/upload' className="nav-item">
+                            <Upload size={16} className="nav-icon" />
+                            <span className="nav-text">Upload File</span>
+                            <div className="nav-underline"></div>
                         </Link>
                     } */}
-                    {currentUser &&
-                        <Link to='/all-files' style={tabStyle}>
-                            <Typography variant="h6" >all files</Typography>
-                        </Link>
-                    }
-                    {currentUser &&
-                    //  (currentUser.role === 'Admin') &&
-                        <Link to='https://image-editor-manager.onrender.com' style={tabStyle}>
-                            <Typography variant="h6" >manager</Typography>
-                        </Link>
-                    }
-                </Box>
-            </Box>
-        </AppBar>
-    </>)
+
+              {currentUser && (
+                <Link to="/all-files" className="nav-item">
+                  <Files size={16} className="nav-icon" />
+                  <span className="nav-text">All Files</span>
+                  <div className="nav-underline"></div>
+                </Link>
+              )}
+
+              {currentUser && (
+                //  (currentUser.role === 'Admin') &&
+                <Link to="https://image-editor-manager.onrender.com" className="nav-item">
+                  <Settings size={16} className="nav-icon" />
+                  <span className="nav-text">Manager</span>
+                  <div className="nav-underline"></div>
+                </Link>
+              )}
+            </div>
+          </nav>
+
+          {/* Auth Section */}
+          <div className="auth-container">
+            <Auth />
+          </div>
+        </div>
+      </header>
+    </>
+  )
 }
+
 export default Menu
