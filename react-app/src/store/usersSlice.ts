@@ -18,7 +18,7 @@ const initialState: UsersState = {
 
 };
 
-const baseURL = 'http://localhost:5213/api/';
+const baseURL = 'https://images-editor-server.onrender.com/api/';
 
 
 

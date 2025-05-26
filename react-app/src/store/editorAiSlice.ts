@@ -19,7 +19,7 @@ const initialState: EditorAiState = {
   error: null,
 };
 
-const baseUrl = 'http://localhost:5213/api';
+const baseUrl = 'https://images-editor-server.onrender.com/api';
 
 // פעולה אסינכרונית לשליחת בקשה לשרת
 export const sendAiRequest = createAsyncThunk(
