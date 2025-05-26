@@ -10,8 +10,8 @@ import { ErrorService } from './error.service';
 })
 export class UserService {
 
-  private baseUrl = "http://localhost:5213/api/user"
-  private authUrl = "http://localhost:5213/api/auth/register"
+  private baseUrl = "https://images-editor-server.onrender.com/api/user"
+  private authUrl = "https://images-editor-server.onrender.com/api/auth/register"
 
   private UsersSubject: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   public users$ = this.UsersSubject.asObservable();

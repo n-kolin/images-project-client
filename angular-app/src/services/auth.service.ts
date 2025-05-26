@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  private authUrl = "http://localhost:5213/api/auth/login";
+  private authUrl = "https://images-editor-server.onrender.com/api/auth/login";
 
 
   constructor(private http: HttpClient) { }
