@@ -286,8 +286,8 @@ import { getFolderById } from "../../store/foldersSlice"
 import FolderCard from "./FolderCard"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import Loading from "../Loading"
-import "../../css/AllFiles.css"
 import Header from "./Header"
+import "../../css/AllFiles.css"
 
 const AllFiles = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -334,12 +334,12 @@ const AllFiles = () => {
   }
 
   return (
-    <div className="files-container">
+    <>
       <Header path={path} setPath={setPath} currentFolder={currentFolder} currentUser={currentUser} />
 
       {(loadingFolder || loadingFile) && <Loading />}
 
-      <div className="content-wrapper">
+      <main className="main-content">
         <div className="content-background">
           <div className="bg-orb orb-1"></div>
           <div className="bg-orb orb-2"></div>
@@ -347,32 +347,53 @@ const AllFiles = () => {
           <div className="bg-orb orb-4"></div>
         </div>
 
-        <div className="folders-grid">
-          {allFolders.map((folder) => (
-            <div key={folder.id} className="grid-item">
-              <FolderCard
-                path={path}
-                folderId={folder.id}
-                parentId={folder.parentId}
-                initFolderName={folder.name}
-                onOpen={handleFolderClick}
-              />
+        {allFolders.length > 0 && (
+          <section className="folders-section">
+            <div className="folders-grid">
+              {allFolders.map((folder) => (
+                <div key={folder.id} className="grid-item">
+                  <FolderCard
+                    path={path}
+                    folderId={folder.id}
+                    parentId={folder.parentId}
+                    initFolderName={folder.name}
+                    onOpen={handleFolderClick}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </section>
+        )}
 
-        <div className="files-grid">
-          {allFiles.map((file) => (
-            <div key={file.id} className="grid-item">
-              <ImgCard userId={currentUser?.id || -1} id={file.id} path={file.path} name={file.name} />
+        {allFiles.length > 0 && (
+          <section className="files-section">
+            <div className="files-grid">
+              {allFiles.map((file) => (
+                <div key={file.id} className="grid-item">
+                  <ImgCard userId={currentUser?.id || -1} id={file.id} path={file.path} name={file.name} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-    </div>
+          </section>
+        )}
+
+        {allFolders.length === 0 && allFiles.length === 0 && !loadingFolder && !loadingFile && (
+          <div className="empty-state">
+            <div className="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <h3 className="empty-title">No files or folders</h3>
+            <p className="empty-description">Start by adding your first file or creating a new folder</p>
+          </div>
+        )}
+      </main>
+    </>
   )
 }
 
 export default AllFiles
+
 
 

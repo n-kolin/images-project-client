@@ -24,6 +24,7 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   //add folder
   const [showInput, setShowInput] = useState(false)
   const [folderName, setFolderName] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleAddFile = () => {
     console.log(currentFolder)
@@ -58,17 +59,22 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   }
 
   const addFolder = async () => {
-    const date = new Date().toISOString().split("T")[0]
-    const newFolder: Partial<FolderType> = {
-      name: folderName || `NEWFOLDER_${date}`,
-      createdBy: currentUser?.id,
-      parentId: currentFolder?.id || null,
-    }
-    const action = await dispatch(addNewFolder(newFolder))
-    console.log(action)
+    setLoading(true)
+    try {
+      const date = new Date().toISOString().split("T")[0]
+      const newFolder: Partial<FolderType> = {
+        name: folderName || `NEWFOLDER_${date}`,
+        createdBy: currentUser?.id,
+        parentId: currentFolder?.id || null,
+      }
+      const action = await dispatch(addNewFolder(newFolder))
+      console.log(action)
 
-    setFolderName("")
-    setShowInput(false)
+      setFolderName("")
+      setShowInput(false)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCancel = () => {
@@ -118,26 +124,48 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
       </div>
 
       {showInput && (
-        <div className="folder-input-container">
-          <input
-            type="text"
-            placeholder="Folder Name"
-            value={folderName}
-            onChange={(e) => setFolderName(e.target.value)}
-            className="folder-input"
-          />
-          <div className="input-actions">
-            <button className="input-btn confirm" onClick={addFolder}>
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-              </svg>
-            </button>
-            <button className="input-btn cancel" onClick={handleCancel}>
-              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M15 9l-6 6M9 9l6 6" />
-              </svg>
-            </button>
+        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && handleCancel()}>
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2 className="modal-title">Create New Folder</h2>
+              <button className="modal-close" onClick={handleCancel}>
+                <svg className="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="input-group">
+                <label className="input-label">Folder Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter folder name..."
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
+                  className="modal-input"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="modal-btn cancel-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+              <button className="modal-btn submit-btn" onClick={addFolder} disabled={loading}>
+                {loading ? (
+                  <div className="loading-spinner"></div>
+                ) : (
+                  <>
+                    <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Create Folder
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}
