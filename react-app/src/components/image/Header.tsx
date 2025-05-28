@@ -3,13 +3,12 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../store/store"
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material"
-import { Add, ArrowUpward, Cancel, CreateNewFolder, FolderOpen } from "@mui/icons-material"
 import { addNewFolder, clearSelectedFolder, getFolderById } from "../../store/foldersSlice"
 import { getChildFiles, getFilesByUser } from "../../store/filesSlice"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import { useNavigate } from "react-router"
 import type { FolderType } from "../../types/FolderType"
+import "../../css/Header.css"
 
 interface HeaderProps {
   path: string
@@ -78,95 +77,71 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   }
 
   return (
-    <Box sx={{ mt: 18, ml: 3 }}>
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton size="small" disabled={currentFolder === null} onClick={handleUpClick}>
-          <ArrowUpward />
-        </IconButton>
-        <Box sx={{ ml: 2, display: "inline-flex" }}>
-          <Typography variant="h6" color="primary" sx={{ fontWeight: "bold" }}>
-            {currentUser?.name + path.replace(/\//g, " / ")}
-          </Typography>
-        </Box>
-        <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<Add />}
-            onClick={handleAddFile}
-            sx={{ marginRight: 2 }}
-          >
-            Add File
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<CreateNewFolder />}
-            onClick={() => setShowInput(true)}
-          >
-            Add Folder
-          </Button>
-        </Box>
-      </Box>
-      {showInput && (
-        <Box
-          mt={2}
-          sx={{
-            transition: "opacity 0.5s ease-in-out",
-            opacity: showInput ? 1 : 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            width: "100%",
-          }}
+    <div className="file-header">
+      <div className="header-background">
+        <div className="floating-orb orb-1"></div>
+        <div className="floating-orb orb-2"></div>
+        <div className="floating-orb orb-3"></div>
+      </div>
+
+      <div className="header-main">
+        <button
+          className={`nav-up-btn ${currentFolder === null ? "disabled" : ""}`}
+          disabled={currentFolder === null}
+          onClick={handleUpClick}
         >
-          <TextField
+          <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M7 14l5-5 5 5" />
+          </svg>
+        </button>
+
+        <div className="breadcrumb-container">
+          <h1 className="breadcrumb-text">{currentUser?.name + path.replace(/\//g, " / ")}</h1>
+        </div>
+
+        <div className="action-buttons">
+          <button className="action-btn primary" onClick={handleAddFile}>
+            <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+            Add File
+          </button>
+          <button className="action-btn secondary" onClick={() => setShowInput(true)}>
+            <svg className="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              <path d="M12 11v6M9 14h6" />
+            </svg>
+            Add Folder
+          </button>
+        </div>
+      </div>
+
+      {showInput && (
+        <div className="folder-input-container">
+          <input
+            type="text"
             placeholder="Folder Name"
-            variant="outlined"
             value={folderName}
             onChange={(e) => setFolderName(e.target.value)}
-            sx={{ marginRight: 1, width: "200px", backgroundColor: "#f0f0f0", borderRadius: 1 }}
-            InputProps={{
-              style: { paddingLeft: "10px" },
-            }}
+            className="folder-input"
           />
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <IconButton
-              color="secondary"
-              onClick={addFolder}
-              sx={{
-                backgroundColor: "#4caf50",
-                ":hover": {
-                  backgroundColor: "#45a049",
-                },
-                color: "white",
-                marginBottom: 1,
-                width: 25,
-                height: 25,
-              }}
-            >
-              <FolderOpen sx={{ fontSize: 14 }} />
-            </IconButton>
-            <IconButton
-              size="small"
-              color="secondary"
-              onClick={handleCancel}
-              sx={{
-                backgroundColor: "#f44336",
-                ":hover": {
-                  backgroundColor: "#d32f2f",
-                },
-                color: "white",
-                width: 25,
-                height: 25,
-              }}
-            >
-              <Cancel sx={{ fontSize: 14 }} />
-            </IconButton>
-          </Box>
-        </Box>
+          <div className="input-actions">
+            <button className="input-btn confirm" onClick={addFolder}>
+              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+              </svg>
+            </button>
+            <button className="input-btn cancel" onClick={handleCancel}>
+              <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M15 9l-6 6M9 9l6 6" />
+              </svg>
+            </button>
+          </div>
+        </div>
       )}
-    </Box>
+    </div>
   )
 }
 

@@ -280,13 +280,13 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, StoreType } from "../../store/store"
-import { Box } from "@mui/material"
 import ImgCard from "./ImgCard"
 import { getChildFiles, getFilesByUser } from "../../store/filesSlice"
 import { getFolderById } from "../../store/foldersSlice"
 import FolderCard from "./FolderCard"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import Loading from "../Loading"
+import "../../css/AllFiles.css"
 import Header from "./Header"
 
 const AllFiles = () => {
@@ -334,48 +334,45 @@ const AllFiles = () => {
   }
 
   return (
-    <>
+    <div className="files-container">
       <Header path={path} setPath={setPath} currentFolder={currentFolder} currentUser={currentUser} />
 
       {(loadingFolder || loadingFile) && <Loading />}
 
-      <Box sx={{ ml: 25, mr: 25, mb: 10, mt: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
-        {allFolders.map((folder) => (
-          <Box
-            key={folder.id}
-            sx={{
-              flex: "1 1 calc(24% - 16px)", // 4 פריטים בשורה עם רווחים
-              maxWidth: "calc(25% - 16px)",
-              boxSizing: "border-box",
-            }}
-          >
-            <FolderCard
-              path={path}
-              folderId={folder.id}
-              parentId={folder.parentId}
-              initFolderName={folder.name}
-              onOpen={handleFolderClick}
-            />
-          </Box>
-        ))}
-      </Box>
-      <Box sx={{ ml: 25, mr: 25, mb: 10, display: "flex", flexWrap: "wrap", gap: 4 }}>
-        {allFiles.map((file) => (
-          <Box
-            key={file.id}
-            sx={{
-              flex: "1 1 calc(24% - 16px)", // 4 פריטים בשורה עם רווחים
-              maxWidth: "calc(25% - 16px)",
-              boxSizing: "border-box",
-            }}
-          >
-            <ImgCard userId={currentUser?.id || -1} id={file.id} path={file.path} name={file.name} />
-          </Box>
-        ))}
-      </Box>
-    </>
+      <div className="content-wrapper">
+        <div className="content-background">
+          <div className="bg-orb orb-1"></div>
+          <div className="bg-orb orb-2"></div>
+          <div className="bg-orb orb-3"></div>
+          <div className="bg-orb orb-4"></div>
+        </div>
+
+        <div className="folders-grid">
+          {allFolders.map((folder) => (
+            <div key={folder.id} className="grid-item">
+              <FolderCard
+                path={path}
+                folderId={folder.id}
+                parentId={folder.parentId}
+                initFolderName={folder.name}
+                onOpen={handleFolderClick}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="files-grid">
+          {allFiles.map((file) => (
+            <div key={file.id} className="grid-item">
+              <ImgCard userId={currentUser?.id || -1} id={file.id} path={file.path} name={file.name} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
 export default AllFiles
+
 
