@@ -37,13 +37,10 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const hideNotification = useCallback(() => {
-    notifications.forEach((notification) => {
-      const ref = notificationRefs.current.get(notification.id)
-      if (ref) {
-        ref.hide()
-      }
+    notificationRefs.current.forEach((ref) => {
+      ref.hide()
     })
-  }, [notifications])
+  }, []) // Remove notifications dependency
 
   const setNotificationRef = useCallback((id: string, ref: NotificationRef | null) => {
     if (ref) {

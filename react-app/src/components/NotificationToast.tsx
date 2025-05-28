@@ -143,8 +143,8 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
                 key={index}
                 className={`notification-action-btn ${action.primary ? "primary" : "secondary"}`}
                 onClick={() => {
-                  action.onClick
-                  hide
+                  action.onClick()
+                  hide()
                 }}
               >
                 {action.text}
