@@ -8,9 +8,9 @@ import { addFile } from "../../store/filesSlice"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, StoreType } from "../../store/store"
 import apiClient from "../../apiClient"
-import Swal from "sweetalert2"
 import { useLocation, useNavigate } from "react-router"
 import "../../css/UploadImage.css"
+import { useNotificationHelpers } from "../../hooks/useNotification"
 
 const UploadImage: React.FC = () => {
   const location = useLocation()
@@ -25,6 +25,7 @@ const UploadImage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const { success, error } = useNotificationHelpers()
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -70,7 +71,6 @@ const UploadImage: React.FC = () => {
     setIsUploading(true)
 
     try {
-      // get pre-signed url
       const response = await apiClient.get("file/presigned-url", {
         params: {
           userId: currentUser?.id,
@@ -82,7 +82,6 @@ const UploadImage: React.FC = () => {
 
       const url = response.data.url
 
-      // Upload the file to S3 using the pre-signed URL
       const uploadResponse = await axios.put(url, file, {
         headers: {
           "Content-Type": file.type,
@@ -95,7 +94,6 @@ const UploadImage: React.FC = () => {
         setMessage("Failed to upload file")
       }
 
-      //add file to DB
       const newFile: Partial<FileType> = {
         name: file.name,
         type: file.type,
@@ -109,20 +107,12 @@ const UploadImage: React.FC = () => {
       const res = await dispatch(addFile(newFile))
       console.log("add file to DB", res)
 
-      Swal.fire({
-        icon: "success",
-        title: "Success!",
-        text: "File uploaded successfully",
-      })
+      success("Upload Successful", `File "${file.name}" was uploaded successfully`)
       navigate("/")
-    } catch (error) {
-      console.error("Error uploading file:", error)
+    } catch (err) {
+      console.error("Error uploading file:", err)
       setMessage("Error uploading file")
-      Swal.fire({
-        icon: "error",
-        title: "Upload Failed",
-        text: "There was an error uploading your file",
-      })
+      error("Upload Failed", "There was an error uploading your file. Please try again.")
     } finally {
       setIsUploading(false)
     }
@@ -163,12 +153,24 @@ const UploadImage: React.FC = () => {
                 <div className="upload-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7,10 12,15 17,10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
+                    <polyline points="17,8 12,3 7,8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
                   </svg>
                 </div>
                 <h3 className="drop-zone-title">Drop your file here</h3>
-                <p className="drop-zone-text">or click to browse from your computer</p>
+                <p className="drop-zone-text">or click the button below to browse</p>
+
+                <div className="browse-section">
+                  <input type="file" onChange={handleFileChange} className="file-input" id="file-upload" />
+                  <label htmlFor="file-upload" className="browse-btn">
+                    <svg className="browse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17,8 12,3 7,8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Browse Files
+                  </label>
+                </div>
               </>
             ) : (
               <div className="file-preview">
@@ -197,18 +199,6 @@ const UploadImage: React.FC = () => {
               </div>
             )}
           </div>
-
-          <input type="file" onChange={handleFileChange} className="file-input" id="file-upload" />
-          <label htmlFor="file-upload" className="file-input-label">
-            <span className="browse-btn">
-              <svg className="browse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17,8 12,3 7,8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-              Browse Files
-            </span>
-          </label>
         </div>
 
         {file && (

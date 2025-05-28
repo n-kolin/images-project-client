@@ -9,6 +9,7 @@ import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import { useNavigate } from "react-router"
 import type { FolderType } from "../../types/FolderType"
 import "../../css/Header.css"
+import { useNotificationHelpers } from "../../hooks/useNotification"
 
 interface HeaderProps {
   path: string
@@ -20,16 +21,13 @@ interface HeaderProps {
 const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const { success, error } = useNotificationHelpers()
 
-  //add folder
   const [showInput, setShowInput] = useState(false)
   const [folderName, setFolderName] = useState("")
   const [loading, setLoading] = useState(false)
 
   const handleAddFile = () => {
-    console.log(currentFolder)
-    console.log(path)
-
     const params = new URLSearchParams()
     if (path) params.append("path", path)
     if (currentFolder) params.append("folderId", currentFolder.id.toString())
@@ -37,7 +35,6 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   }
 
   const handleUpClick = async () => {
-    // debugger
     const folderId = currentFolder?.parentId
     if (!folderId) {
       const filesAction = await dispatch(getFilesByUser(currentUser?.id || -1))
@@ -70,8 +67,11 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
       const action = await dispatch(addNewFolder(newFolder))
       console.log(action)
 
+      success("Folder Created", `Folder "${folderName || `NEWFOLDER_${date}`}" was created successfully`)
       setFolderName("")
       setShowInput(false)
+    } catch (err) {
+      error("Error", "Failed to create folder. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -84,6 +84,8 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
 
   return (
     <div className="file-header-compact">
+      <div className="header-glow"></div>
+
       <div className="breadcrumb-section">
         <button
           className={`nav-up-btn-compact ${currentFolder === null ? "disabled" : ""}`}
