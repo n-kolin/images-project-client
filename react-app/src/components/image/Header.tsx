@@ -8,7 +8,7 @@ import { getChildFiles, getFilesByUser } from "../../store/filesSlice"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import { useNavigate } from "react-router"
 import type { FolderType } from "../../types/FolderType"
-import "./Header.css"
+import "../../css/Header.css"
 
 interface HeaderProps {
   path: string
