@@ -287,7 +287,7 @@ import FolderCard from "./FolderCard"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import Loading from "../Loading"
 import Header from "./Header"
-import "./AllFilesAttachment.css"
+import "../../css/AllFiles.css"
 
 const AllFiles = () => {
   const dispatch = useDispatch<AppDispatch>()
