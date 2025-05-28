@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../store/store"
@@ -26,6 +28,8 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   const [showInput, setShowInput] = useState(false)
   const [folderName, setFolderName] = useState("")
   const [loading, setLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showSearch, setShowSearch] = useState(false)
 
   const handleAddFile = () => {
     const params = new URLSearchParams()
@@ -82,6 +86,20 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
     setFolderName("")
   }
 
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      console.log("Searching for:", searchQuery)
+      // TODO: Implement search functionality
+      success("Search", `Searching for "${searchQuery}"...`)
+    }
+  }
+
+  const handleSearchKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch()
+    }
+  }
+
   return (
     <div className="file-header-compact">
       <div className="header-glow"></div>
@@ -104,6 +122,31 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
         </div>
       </div>
 
+      <div className="search-section">
+        <div className={`search-container ${showSearch ? "expanded" : ""}`}>
+          <input
+            type="text"
+            placeholder="Search files and folders..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleSearchKeyPress}
+            className="search-input"
+          />
+          <button className="search-btn" onClick={handleSearch}>
+            <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
+        </div>
+        <button className="search-toggle" onClick={() => setShowSearch(!showSearch)} title="Toggle search">
+          <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+      </div>
+
       <div className="action-section">
         <button className="action-btn-compact primary" onClick={handleAddFile}>
           <svg className="btn-icon-compact" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -124,8 +167,8 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
       </div>
 
       {showInput && (
-        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && handleCancel()}>
-          <div className="modal-content">
+        <div className="modal-overlay-fixed" onClick={(e) => e.target === e.currentTarget && handleCancel()}>
+          <div className="modal-content-centered">
             <div className="modal-header">
               <h2 className="modal-title">Create New Folder</h2>
               <button className="modal-close" onClick={handleCancel}>

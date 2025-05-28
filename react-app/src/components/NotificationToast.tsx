@@ -27,7 +27,8 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
   ({ type = "info", title, message, duration = 5000, actions = [], onClose }, ref) => {
     const [visible, setVisible] = useState(false)
     const [exiting, setExiting] = useState(false)
-    const timerRef = useRef<number | null>(null) // Changed from NodeJS.Timeout to number
+    const timerRef = useRef<number | null>(null)
+    const mountedRef = useRef(true)
 
     const getIcon = () => {
       switch (type) {
@@ -66,22 +67,33 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
     }
 
     const show = () => {
+      if (!mountedRef.current) return
       setVisible(true)
       if (duration > 0) {
         timerRef.current = window.setTimeout(() => {
-          // Use window.setTimeout
-          hide()
+          if (mountedRef.current) {
+            hide()
+          }
         }, duration)
       }
     }
 
     const hide = () => {
+      if (!mountedRef.current) return
+
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+
       setExiting(true)
       setTimeout(() => {
-        setVisible(false)
-        setExiting(false)
-        if (onClose) onClose()
-      }, 300)
+        if (mountedRef.current) {
+          setVisible(false)
+          setExiting(false)
+          if (onClose) onClose()
+        }
+      }, 400)
     }
 
     useImperativeHandle(ref, () => ({
@@ -90,9 +102,11 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
     }))
 
     useEffect(() => {
+      mountedRef.current = true
       return () => {
+        mountedRef.current = false
         if (timerRef.current) {
-          window.clearTimeout(timerRef.current) // Use window.clearTimeout
+          window.clearTimeout(timerRef.current)
         }
       }
     }, [])
@@ -101,6 +115,14 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
 
     return (
       <div className={`notification-toast ${type} ${exiting ? "exiting" : ""}`}>
+        <div className="notification-glow"></div>
+        <div className="notification-particles">
+          <div className="particle particle-1"></div>
+          <div className="particle particle-2"></div>
+          <div className="particle particle-3"></div>
+          <div className="particle particle-4"></div>
+        </div>
+
         <div className="notification-content">
           <div className="notification-icon-container">{getIcon()}</div>
           <div className="notification-text">
@@ -121,10 +143,8 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
                 key={index}
                 className={`notification-action-btn ${action.primary ? "primary" : "secondary"}`}
                 onClick={() => {
-                  action.onClick()
-                  if (timerRef.current) {
-                    window.clearTimeout(timerRef.current)
-                  }
+                  action.onClick
+                  hide
                 }}
               >
                 {action.text}
@@ -133,9 +153,11 @@ const NotificationToast = forwardRef<NotificationRef, NotificationProps>(
           </div>
         )}
 
-        <div className="notification-progress">
-          <div className="notification-progress-bar" style={{ animationDuration: `${duration}ms` }}></div>
-        </div>
+        {duration > 0 && (
+          <div className="notification-progress">
+            <div className="notification-progress-bar" style={{ animationDuration: `${duration}ms` }}></div>
+          </div>
+        )}
       </div>
     )
   },

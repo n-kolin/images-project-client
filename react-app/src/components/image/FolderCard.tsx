@@ -1,291 +1,190 @@
+"use client"
 
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, CardActions, Button, Box, IconButton, TextField, InputAdornment } from '@mui/material';
-import FolderIcon from '@mui/icons-material/Folder';
-import OpenFolder from './OpenFolder';
-import { useNavigate } from 'react-router';
-import { Cancel, Delete, Edit, FolderOpen, OpenInNew } from '@mui/icons-material';
-import { FolderType } from '../../types/FolderType';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store';
-import { softDeleteFolder, softDeleteFolderRecursively, updateFolder } from '../../store/foldersSlice';
-import Swal from 'sweetalert2';
+import type React from "react"
+import { useState } from "react"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "../../store/store"
+import type { FolderType } from "../../types/FolderType"
+import { softDeleteFolder, softDeleteFolderRecursively, updateFolder } from "../../store/foldersSlice"
+import { useNotificationHelpers } from "../../hooks/useNotification"
+import "../../css/FolderCard.css"
 
 const FolderCard = ({
-    initFolderName,
-    folderId,
-    parentId,
-    path,
-    onOpen
-}:
-    {
-        initFolderName: string,
-        folderId: number,
-        parentId: number | null,
-        path: string
-        onOpen: any
-    }) => {
+  initFolderName,
+  folderId,
+  parentId,
+  path,
+  onOpen,
+}: {
+  initFolderName: string
+  folderId: number
+  parentId: number | null
+  path: string
+  onOpen: any
+}) => {
+  const [hover, setHover] = useState(false)
+  const [folderName, setFolderName] = useState(initFolderName)
+  const [isEditing, setIsEditing] = useState(false)
 
-    const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>()
+  const { success, error, warning } = useNotificationHelpers()
 
-    const [hover, setHover] = useState(false);
+  const handleOpen = () => {
+    onOpen(folderId)
+  }
 
-    const handleOpen = () => {
-        // path = path ? path + '/' + folderName : folderName;
-        // const params = new URLSearchParams();
-        // if (path) params.append('path', path);
-        // navigate(`/all-files?${params.toString()}`);
-        onOpen(folderId);
-    };
+  const handleDoubleClick = () => {
+    setIsEditing(true)
+  }
 
-    const [folderName, setFolderName] = useState(initFolderName);
-    const [isEditing, setIsEditing] = useState(false);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFolderName(event.target.value)
+  }
 
-    const handleDoubleClick = () => {
-        setIsEditing(true);
-    };
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFolderName(event.target.value);
-    };
-
-    const dispatch = useDispatch<AppDispatch>();
-    const handleKeyPress = async (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            setIsEditing(false);
-            const updatedFolder: Partial<FolderType> = {
-                id: folderId,
-                name: folderName,
-                parentId
-            }
-            await dispatch(updateFolder({ id: folderId, folder: updatedFolder }));
-            //לשנות את שם התיקיה
-            // try {
-            //   await axios.put(`/api/folders/${folderId}`, { name: folderName });
-            //   console.log('Folder name updated successfully');
-            // } catch (error) {
-            //   console.error('Error updating folder name:', error);
-            // }
+  const handleKeyPress = async (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      setIsEditing(false)
+      try {
+        const updatedFolder: Partial<FolderType> = {
+          id: folderId,
+          name: folderName,
+          parentId,
         }
-    };
+        const res = await dispatch(updateFolder({ id: folderId, folder: updatedFolder }))
 
-    const cancelEdit = () => {
-        setIsEditing(false);
-        setFolderName(initFolderName);
-    };
-
-
-    const handleDelete = async () => {
-
-        const res = await dispatch(softDeleteFolder(folderId));
-        console.log('delete folder', res);
-        if (res.meta.requestStatus === 'fulfilled') {
-            // מחיקה הצליחה
-            console.log('Folder deleted successfully');
-            Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: "The folder was successfully deleted.",
-            });
-        }
-
-        else if (res.payload.status === 409) {
-            // שגיאה 409 - Conflict
-            const confirm = await Swal.fire({
-                icon: "warning",
-                title: "Conflict",
-                text: "The folder contains subfolders or files.Do you want to delete anyway?",
-                showCancelButton: true,
-                confirmButtonText: "yes",
-                cancelButtonText: "no",
-            });
-
-            if (confirm.isConfirmed) {
-                const res = await dispatch(softDeleteFolderRecursively(folderId));
-                console.log('rec delete', res);
-
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: "The folder was successfully deleted.",
-                });
-            }
+        if (res.meta.requestStatus === "fulfilled") {
+          success("Folder Updated", `Folder renamed to "${folderName}" successfully`)
         } else {
-            // שגיאה אחרת
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: res.payload.response.data || 'Deletion failed.',
-            });
+          error("Update Failed", "Failed to update folder name")
+          setFolderName(initFolderName)
         }
+      } catch (err) {
+        console.error("Update error:", err)
+        error("Update Failed", "An error occurred while updating the folder")
+        setFolderName(initFolderName)
+      }
+    } else if (event.key === "Escape") {
+      cancelEdit()
+    }
+  }
 
+  const cancelEdit = () => {
+    setIsEditing(false)
+    setFolderName(initFolderName)
+  }
 
+  const handleDelete = async () => {
+    try {
+      const res = await dispatch(softDeleteFolder(folderId))
 
-
-    };
-    return (
-        <Card
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            sx={{
-                maxWidth: 300,
-                borderRadius: 2,
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'column',
-                padding: '10px',
-                backgroundColor: hover ? 'rgba(0, 0, 0, 0.04)' : 'white',
-                transition: 'background-color 0.3s',
-                boxShadow: hover ? '0 4px 8px rgba(0, 0, 0, 0.1)' : 'none',
-                border: '1px solid #ddd', // מסגרת דקה
-            }}
-        >
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    // background: 'rgba(0, 0, 0, 0.1)',
-                    padding: '16px',
-                }}
-            >
-                <FolderIcon sx={{
-                    fontSize: 70,
-                    color: 'primary.main',
-                    cursor: 'pointer',
-                }} onClick={handleOpen} />
-            </Box>
-            <CardContent>
-                {isEditing ? (
-                    // <TextField
-                    //     value={folderName}
-                    //     onChange={handleChange}
-                    //     onKeyPress={handleKeyPress}
-                    //     autoFocus
-                    //     fullWidth
-                    //     variant="outlined"
-                    //     sx={{
-                    //         background: '#fff',
-                    //         borderRadius: '4px',
-                    //         padding:.2,
-                    //         input: { color: '#000' },
-                    //     }}
-
-                    //     InputProps={{
-                    //         endAdornment: (
-                    //             <InputAdornment position="end">
-                    //                 <IconButton onClick={cancelEdit}>
-                    //                     <Cancel />
-                    //                 </IconButton>
-                    //             </InputAdornment>
-                    //         ),
-                    //     }}
-
-                    // />
-                    <Box position="relative" width="100%">
-                        <TextField
-                            value={folderName}
-                            onChange={handleChange}
-                            onKeyPress={handleKeyPress}
-                            autoFocus
-                            fullWidth
-                            variant="standard"
-                            multiline
-
-                            sx={{
-                                padding: 0,
-                                input: {
-                                    padding: 0,
-                                    color: '#000',
-                                    fontSize: 'inherit',
-                                    lineHeight: 'inherit',
-                                    border: 'none',
-                                    outline: 'none',
-                                },
-                                '.MuiInput-underline:before': {
-                                    borderBottom: 'none',
-                                },
-                                '.MuiInput-underline:after': {
-                                    borderBottom: 'none',
-                                },
-                                '.MuiInput-underline:hover:before': {
-                                    borderBottom: 'none',
-                                },
-                                background: 'transparent',
-                                borderRadius: 0,
-                            }}
-                        />
-                        <IconButton
-                            onClick={cancelEdit}
-                            sx={{
-                                position: 'absolute',
-                                top: 0,
-                                right: 0,
-                                padding: 0,
-                                color: '#000'
-                            }}
-                        >
-                            <Cancel fontSize="small" />
-                        </IconButton>
-                    </Box>
-                ) : (
-                    <Typography variant="body1" component="div" noWrap sx={{ textAlign: 'center', marginTop: '10px' }}
-
-                        onDoubleClick={handleDoubleClick}
-                    >
-                        {folderName}
-                    </Typography>)}
-            </CardContent>
+      if (res.meta.requestStatus === "fulfilled") {
+        success("Folder Deleted", `Folder "${initFolderName}" was deleted successfully`)
+      } else if (res.payload?.status === 409) {
+        warning("Folder Not Empty", "The folder contains subfolders or files. Do you want to delete anyway?", {
+          duration: 0,
+          actions: [
             {
-                hover &&
-                <CardActions sx={{ position: 'absolute', right: 10, display: 'flex', flexDirection: 'column' }}>
-                    {/* <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={onOpen}
-                    sx={{
-                        backgroundColor: '#6a11cb',
-                        backgroundImage: 'linear-gradient(315deg, #6a11cb 0%, #2575fc 74%)',
-                        color: '#fff',
-                        '&:hover': {
-                            backgroundImage: 'linear-gradient(315deg, #2575fc 0%, #6a11cb 74%)',
-                        },
-                    }}
-                >
-                    Open
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={onDelete}
-                    sx={{
-                        backgroundColor: '#ff416c',
-                        backgroundImage: 'linear-gradient(315deg, #ff416c 0%, #ff4b2b 74%)',
-                        color: '#fff',
-                        '&:hover': {
-                            backgroundImage: 'linear-gradient(315deg, #ff4b2b 0%, #ff416c 74%)',
-                        },
-                    }}
-                >
-                    Delete
-                </Button> */}
+              text: "Cancel",
+              onClick: () => console.log("Delete cancelled"),
+              primary: false,
+            },
+            {
+              text: "Delete All",
+              onClick: async () => {
+                try {
+                  const recursiveRes = await dispatch(softDeleteFolderRecursively(folderId))
+                  if (recursiveRes.meta.requestStatus === "fulfilled") {
+                    success(
+                      "Folder Deleted",
+                      `Folder "${initFolderName}" and all its contents were deleted successfully`,
+                    )
+                  } else {
+                    error("Delete Failed", "Failed to delete folder and its contents")
+                  }
+                } catch (err) {
+                  console.error("Recursive delete error:", err)
+                  error("Delete Failed", "An error occurred while deleting the folder")
+                }
+              },
+              primary: true,
+            },
+          ],
+        })
+      } else {
+        error("Delete Failed", res.payload?.response?.data || "Failed to delete folder")
+      }
+    } catch (err) {
+      console.error("Delete error:", err)
+      error("Delete Failed", "An error occurred while deleting the folder")
+    }
+  }
 
-                    <IconButton size="small" onClick={handleDoubleClick}>
-                        <Edit />
-                    </IconButton>
-                    <IconButton size="small" onClick={handleDelete}>
-                        <Delete />
-                    </IconButton>
+  return (
+    <article
+      className={`folder-card ${hover ? "hover" : ""}`}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div className="folder-card-glow"></div>
+      <div className="folder-card-particles">
+        <div className="folder-particle particle-1"></div>
+        <div className="folder-particle particle-2"></div>
+        <div className="folder-particle particle-3"></div>
+      </div>
 
-                    {/* <IconButton size="small" onClick={handleOpen}>
-                        <FolderOpen />
-                    </IconButton> */}
+      <div className="folder-icon-container" onClick={handleOpen}>
+        <div className="folder-icon-bg"></div>
+        <svg className="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
+        <div className="folder-icon-shine"></div>
+      </div>
 
-                </CardActions>
-            }
-        </Card>
-    );
-};
+      <div className="folder-content">
+        {isEditing ? (
+          <div className="folder-edit-container">
+            <input
+              type="text"
+              value={folderName}
+              onChange={handleChange}
+              onKeyDown={handleKeyPress}
+              className="folder-edit-input"
+              autoFocus
+            />
+            <button className="folder-cancel-btn" onClick={cancelEdit}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M15 9l-6 6M9 9l6 6" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <h3 className="folder-name" onDoubleClick={handleDoubleClick}>
+            {folderName}
+          </h3>
+        )}
+      </div>
 
-export default FolderCard;
+      {hover && (
+        <div className="folder-actions">
+          <button className="folder-action-btn edit-btn" onClick={handleDoubleClick} title="Edit name">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+          </button>
+          <button className="folder-action-btn delete-btn" onClick={handleDelete} title="Delete folder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="3,6 5,6 21,6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <line x1="10" y1="11" x2="10" y2="17" />
+              <line x1="14" y1="11" x2="14" y2="17" />
+            </svg>
+          </button>
+        </div>
+      )}
+    </article>
+  )
+}
+
+export default FolderCard
