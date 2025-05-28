@@ -10,17 +10,19 @@ import { getChildFiles, getFilesByUser } from "../../store/filesSlice"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import { useNavigate } from "react-router"
 import type { FolderType } from "../../types/FolderType"
-import "../../css/Header.css"
 import { useNotificationHelpers } from "../../hooks/useNotification"
+import "../../css/Header.css"
 
 interface HeaderProps {
   path: string
   setPath: (path: string) => void
   currentFolder: any
   currentUser: any
+  searchQuery: string
+  setSearchQuery: (query: string) => void
 }
 
-const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
+const Header = ({ path, setPath, currentFolder, currentUser, searchQuery, setSearchQuery }: HeaderProps) => {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const { success, error } = useNotificationHelpers()
@@ -28,8 +30,6 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
   const [showInput, setShowInput] = useState(false)
   const [folderName, setFolderName] = useState("")
   const [loading, setLoading] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [showSearch, setShowSearch] = useState(false)
 
   const handleAddFile = () => {
     const params = new URLSearchParams()
@@ -86,18 +86,12 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
     setFolderName("")
   }
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      console.log("Searching for:", searchQuery)
-      // TODO: Implement search functionality
-      success("Search", `Searching for "${searchQuery}"...`)
-    }
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
   }
 
-  const handleSearchKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch()
-    }
+  const clearSearch = () => {
+    setSearchQuery("")
   }
 
   return (
@@ -123,28 +117,29 @@ const Header = ({ path, setPath, currentFolder, currentUser }: HeaderProps) => {
       </div>
 
       <div className="search-section">
-        <div className={`search-container ${showSearch ? "expanded" : ""}`}>
+        <div className="search-container">
           <input
             type="text"
             placeholder="Search files and folders..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={handleSearchKeyPress}
+            onChange={handleSearchChange}
             className="search-input"
           />
-          <button className="search-btn" onClick={handleSearch}>
+          {searchQuery && (
+            <button className="search-clear" onClick={clearSearch} title="Clear search">
+              <svg className="clear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M15 9l-6 6M9 9l6 6" />
+              </svg>
+            </button>
+          )}
+          <div className="search-icon-container">
             <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
             </svg>
-          </button>
+          </div>
         </div>
-        <button className="search-toggle" onClick={() => setShowSearch(!showSearch)} title="Toggle search">
-          <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-        </button>
       </div>
 
       <div className="action-section">

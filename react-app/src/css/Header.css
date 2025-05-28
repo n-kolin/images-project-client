@@ -146,31 +146,33 @@
 .search-section {
   display: flex;
   align-items: center;
-  gap: 12px;
   z-index: 2;
   position: relative;
+  flex: 1;
+  max-width: 400px;
+  margin: 0 20px;
 }
 
 .search-container {
   display: flex;
   align-items: center;
-  background: rgba(248, 250, 252, 0.8);
+  background: rgba(248, 250, 252, 0.9);
   border: 2px solid rgba(99, 102, 241, 0.2);
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
-  width: 0;
-  opacity: 0;
+  width: 100%;
+  position: relative;
 }
 
-.search-container.expanded {
-  width: 280px;
-  opacity: 1;
+.search-container:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .search-input {
   flex: 1;
-  padding: 10px 16px;
+  padding: 12px 16px;
   border: none;
   background: transparent;
   font-size: 0.95rem;
@@ -183,44 +185,40 @@
   color: #94a3b8;
 }
 
-.search-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+.search-clear {
+  background: none;
   border: none;
-  padding: 10px 12px;
+  padding: 8px;
   cursor: pointer;
+  color: #94a3b8;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.search-btn:hover {
-  background: linear-gradient(135deg, #5b5ff1, #7c3aed);
+.search-clear:hover {
+  color: #ef4444;
+  transform: scale(1.1);
 }
 
-.search-toggle {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border: none;
-  border-radius: 12px;
-  width: 44px;
-  height: 44px;
+.clear-icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+.search-icon-container {
+  padding: 12px 16px;
+  color: #6366f1;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
-}
-
-.search-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
 }
 
 .search-icon {
   width: 18px;
   height: 18px;
-  color: white;
   stroke-width: 2;
 }
 
@@ -517,10 +515,8 @@
 
   .search-section {
     justify-content: center;
-  }
-
-  .search-container.expanded {
-    width: 100%;
+    max-width: none;
+    margin: 0;
   }
 
   .action-section {
@@ -560,9 +556,5 @@
 
   .path-text {
     font-size: 1rem;
-  }
-
-  .search-toggle {
-    width: 100%;
   }
 }

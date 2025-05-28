@@ -287,11 +287,12 @@ import FolderCard from "./FolderCard"
 import { getChildFolders, getFoldersByUser } from "../../store/foldersSlice"
 import Loading from "../Loading"
 import Header from "./Header"
-import "../../css/AllFiles.css"
+import "./AllFilesAttachment.css"
 
 const AllFiles = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const [path, setPath] = useState<string>("") // הוספת משתנה מצב עבור path
+  const [path, setPath] = useState<string>("")
+  const [searchQuery, setSearchQuery] = useState<string>("")
 
   //loading
   const loadingFolder = useSelector((state: StoreType) => state.folders.loadingList)
@@ -302,6 +303,11 @@ const AllFiles = () => {
 
   const currentUser = useSelector((state: StoreType) => state.auth.currentUser)
   const currentFolder = useSelector((state: StoreType) => state.folders.selectedFolder)
+
+  // Filter files and folders based on search query
+  const filteredFiles = allFiles.filter((file) => file.name.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  const filteredFolders = allFolders.filter((folder) => folder.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -335,7 +341,14 @@ const AllFiles = () => {
 
   return (
     <>
-      <Header path={path} setPath={setPath} currentFolder={currentFolder} currentUser={currentUser} />
+      <Header
+        path={path}
+        setPath={setPath}
+        currentFolder={currentFolder}
+        currentUser={currentUser}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       {(loadingFolder || loadingFile) && <Loading />}
 
@@ -347,10 +360,10 @@ const AllFiles = () => {
           <div className="bg-orb orb-4"></div>
         </div>
 
-        {allFolders.length > 0 && (
+        {filteredFolders.length > 0 && (
           <section className="folders-section">
             <div className="folders-grid">
-              {allFolders.map((folder) => (
+              {filteredFolders.map((folder) => (
                 <div key={folder.id} className="grid-item">
                   <FolderCard
                     path={path}
@@ -365,10 +378,10 @@ const AllFiles = () => {
           </section>
         )}
 
-        {allFiles.length > 0 && (
+        {filteredFiles.length > 0 && (
           <section className="files-section">
             <div className="files-grid">
-              {allFiles.map((file) => (
+              {filteredFiles.map((file) => (
                 <div key={file.id} className="grid-item">
                   <ImgCard userId={currentUser?.id || -1} id={file.id} path={file.path} name={file.name} />
                 </div>
@@ -377,15 +390,21 @@ const AllFiles = () => {
           </section>
         )}
 
-        {allFolders.length === 0 && allFiles.length === 0 && !loadingFolder && !loadingFile && (
+        {filteredFolders.length === 0 && filteredFiles.length === 0 && !loadingFolder && !loadingFile && (
           <div className="empty-state">
             <div className="empty-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <h3 className="empty-title">No files or folders</h3>
-            <p className="empty-description">Start by adding your first file or creating a new folder</p>
+            <h3 className="empty-title">
+              {searchQuery ? `No results found for "${searchQuery}"` : "No files or folders"}
+            </h3>
+            <p className="empty-description">
+              {searchQuery
+                ? "Try adjusting your search terms or clear the search to see all files"
+                : "Start by adding your first file or creating a new folder"}
+            </p>
           </div>
         )}
       </main>
@@ -394,6 +413,4 @@ const AllFiles = () => {
 }
 
 export default AllFiles
-
-
 
