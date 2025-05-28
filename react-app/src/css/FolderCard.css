@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 .folder-card {
-  width: 200px;
-  height: 220px;
+  width: 180px;
+  height: 200px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 16px;
@@ -100,12 +100,12 @@
 
 .folder-icon-container {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   z-index: 2;
 }
 
@@ -139,8 +139,8 @@
 }
 
 .folder-icon {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   color: #6366f1;
   stroke-width: 1.5;
   z-index: 2;
@@ -191,7 +191,7 @@
 }
 
 .folder-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #374151;
   margin: 0;
@@ -204,6 +204,11 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  cursor: text;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .folder-name:hover {
@@ -211,64 +216,23 @@
   -webkit-text-fill-color: #6366f1;
 }
 
-.folder-edit-container {
-  position: relative;
-  width: 100%;
-}
-
-.folder-edit-input {
-  width: 100%;
-  padding: 8px 28px 8px 12px;
+.folder-name.editing {
+  background: rgba(99, 102, 241, 0.1);
   border: 2px solid #6366f1;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
   outline: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+  -webkit-text-fill-color: #374151;
+  color: #374151;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.folder-edit-input:focus {
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-  transform: translateY(-1px);
-}
-
-.folder-cancel-btn {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.folder-cancel-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.folder-cancel-btn svg {
-  width: 12px;
-  height: 12px;
-  stroke-width: 2;
+.folder-name.editing:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 .folder-actions {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -284,10 +248,10 @@
 }
 
 .folder-action-btn {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -298,8 +262,8 @@
 }
 
 .folder-action-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   stroke-width: 2;
 }
 
@@ -328,32 +292,9 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .folder-card {
-    width: 180px;
-    height: 200px;
-    padding: 14px;
-  }
-
-  .folder-icon-container {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 14px;
-  }
-
-  .folder-icon {
-    width: 45px;
-    height: 45px;
-  }
-
-  .folder-name {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .folder-card {
     width: 160px;
     height: 180px;
-    padding: 12px;
+    padding: 14px;
   }
 
   .folder-icon-container {
@@ -370,6 +311,29 @@
   .folder-name {
     font-size: 0.9rem;
   }
+}
+
+@media (max-width: 480px) {
+  .folder-card {
+    width: 140px;
+    height: 160px;
+    padding: 12px;
+  }
+
+  .folder-icon-container {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 10px;
+  }
+
+  .folder-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .folder-name {
+    font-size: 0.85rem;
+  }
 
   .folder-actions {
     top: 8px;
@@ -377,12 +341,12 @@
   }
 
   .folder-action-btn {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 
   .folder-action-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
   }
 }
