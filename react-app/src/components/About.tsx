@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 const About = () => {
     const url = "../../public/welcome.gif"
 
-    // const { success, error, info } = useNotificationHelpers()
+    const { success, error, info } = useNotificationHelpers()
 
-    // useEffect(()=>{
-    //     error("Welcome to File Manager", "Explore your files with ease!", { duration: 3000 })
-    // },[])
+    useEffect(()=>{
+        error("Welcome to File Manager", "Explore your files with ease!", { duration: 3000 })
+    },[])
     return (
         <>
             <Container maxWidth="lg" sx={{ mt: 8 }}>
