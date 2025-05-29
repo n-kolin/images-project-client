@@ -3,7 +3,7 @@ import { useNotificationHelpers } from '../hooks/useNotification';
 import { useEffect } from 'react';
 
 const About = () => {
-    const url = "../../public/welcome.gif"
+    const url = "https://github.com/n-kolin/images-project-client/blob/main/react-app/public/imgs/1.jpg"
 
     const { success, error, info } = useNotificationHelpers()
 
