@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../store/store"
 import type { FolderType } from "../../types/FolderType"
 import { softDeleteFolder, softDeleteFolderRecursively, updateFolder } from "../../store/foldersSlice"
-import { useNotificationHelpers } from "../hooks/useNotification"
-import "./FolderCard.css"
+import { useNotificationHelpers } from "../../hooks/useNotification"
+import "../../css/FolderCard.css"
 
 const FolderCard = ({
   initFolderName,
