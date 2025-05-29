@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import type { AppDispatch } from "../../store/store"
 import type { FolderType } from "../../types/FolderType"
@@ -25,9 +25,22 @@ const FolderCard = ({
   const [hover, setHover] = useState(false)
   const [folderName, setFolderName] = useState(initFolderName)
   const [isEditing, setIsEditing] = useState(false)
+  const nameRef = useRef<HTMLDivElement>(null)
 
   const dispatch = useDispatch<AppDispatch>()
   const { success, error, warning } = useNotificationHelpers()
+
+  useEffect(() => {
+    if (isEditing && nameRef.current) {
+      nameRef.current.focus()
+      // Select all text
+      const range = document.createRange()
+      range.selectNodeContents(nameRef.current)
+      const selection = window.getSelection()
+      selection?.removeAllRanges()
+      selection?.addRange(range)
+    }
+  }, [isEditing])
 
   const handleOpen = () => {
     if (!isEditing) {
@@ -35,44 +48,74 @@ const FolderCard = ({
     }
   }
 
-  const handleDoubleClick = () => {
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
     setIsEditing(true)
-  }
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFolderName(event.target.value)
   }
 
   const handleKeyPress = async (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      setIsEditing(false)
-      try {
-        const updatedFolder: Partial<FolderType> = {
-          id: folderId,
-          name: folderName,
-          parentId,
-        }
-        const res = await dispatch(updateFolder({ id: folderId, folder: updatedFolder }))
-
-        if (res.meta.requestStatus === "fulfilled") {
-          success("Folder Updated", `Folder renamed to "${folderName}" successfully`)
-        } else {
-          error("Update Failed", "Failed to update folder name")
-          setFolderName(initFolderName)
-        }
-      } catch (err) {
-        console.error("Update error:", err)
-        error("Update Failed", "An error occurred while updating the folder")
-        setFolderName(initFolderName)
-      }
+      event.preventDefault()
+      await saveChanges()
     } else if (event.key === "Escape") {
       cancelEdit()
+    }
+  }
+
+  const handleBlur = async () => {
+    await saveChanges()
+  }
+
+  const handleInput = (event: React.FormEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement
+    setFolderName(target.textContent || "")
+  }
+
+  const saveChanges = async () => {
+    setIsEditing(false)
+    const trimmedName = folderName.trim()
+
+    if (!trimmedName || trimmedName === initFolderName) {
+      setFolderName(initFolderName)
+      if (nameRef.current) {
+        nameRef.current.textContent = initFolderName
+      }
+      return
+    }
+
+    try {
+      const updatedFolder: Partial<FolderType> = {
+        id: folderId,
+        name: trimmedName,
+        parentId,
+      }
+      const res = await dispatch(updateFolder({ id: folderId, folder: updatedFolder }))
+
+      if (res.meta.requestStatus === "fulfilled") {
+        success("Folder Updated", `Folder renamed to "${trimmedName}" successfully`)
+      } else {
+        error("Update Failed", "Failed to update folder name")
+        setFolderName(initFolderName)
+        if (nameRef.current) {
+          nameRef.current.textContent = initFolderName
+        }
+      }
+    } catch (err) {
+      console.error("Update error:", err)
+      error("Update Failed", "An error occurred while updating the folder")
+      setFolderName(initFolderName)
+      if (nameRef.current) {
+        nameRef.current.textContent = initFolderName
+      }
     }
   }
 
   const cancelEdit = () => {
     setIsEditing(false)
     setFolderName(initFolderName)
+    if (nameRef.current) {
+      nameRef.current.textContent = initFolderName
+    }
   }
 
   const handleDelete = async () => {
@@ -143,29 +186,18 @@ const FolderCard = ({
       </div>
 
       <div className="folder-content">
-        {isEditing ? (
-          <div className="folder-edit-container">
-            <input
-              type="text"
-              value={folderName}
-              onChange={handleChange}
-              onKeyDown={handleKeyPress}
-              className="folder-edit-input"
-              autoFocus
-              onBlur={() => setIsEditing(false)}
-            />
-            <button className="folder-cancel-btn" onClick={cancelEdit}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M15 9l-6 6M9 9l6 6" />
-              </svg>
-            </button>
-          </div>
-        ) : (
-          <h3 className="folder-name" onDoubleClick={handleDoubleClick}>
-            {folderName}
-          </h3>
-        )}
+        <div
+          ref={nameRef}
+          className={`folder-name ${isEditing ? "editing" : ""}`}
+          contentEditable={isEditing}
+          suppressContentEditableWarning={true}
+          onDoubleClick={handleDoubleClick}
+          onKeyDown={handleKeyPress}
+          onBlur={handleBlur}
+          onInput={handleInput}
+        >
+          {folderName}
+        </div>
       </div>
 
       {hover && !isEditing && (
