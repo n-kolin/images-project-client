@@ -139,7 +139,7 @@ const Home = () => {
               <div className="stat-label">Average Processing</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">24/7</div>
+              <div className="stat-number">24/6</div>
               <div className="stat-label">Support</div>
             </div>
           </div>
