@@ -28,8 +28,8 @@ const Menu = () => {
                 <div className="logo-inner"></div>
               </div>
               <h1 className="logo-text">
-                <span className="logo-main">My</span>
-                <span className="logo-accent">Brand</span>
+                <span className="logo-main">Image</span>
+                <span className="logo-accent">Editor</span>
               </h1>
             </div>
           </div>
@@ -43,7 +43,7 @@ const Menu = () => {
                 <div className="nav-underline"></div>
               </Link>
 
-              <Link to="/" className="nav-item">
+              <Link to="/about" className="nav-item">
                 <Info size={16} className="nav-icon" />
                 <span className="nav-text">About</span>
                 <div className="nav-underline"></div>
@@ -59,7 +59,7 @@ const Menu = () => {
                     } */}
 
               {currentUser && (
-                <Link to="/all-files" className="nav-item">
+                <Link to="/files" className="nav-item">
                   <Files size={16} className="nav-icon" />
                   <span className="nav-text">All Files</span>
                   <div className="nav-underline"></div>

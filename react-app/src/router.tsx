@@ -11,6 +11,7 @@ import Canvas from "./components/canvas/Canvas";
 import ImageEditor from "./components/editor/ImageEditor";
 // import AiEditor from "./components/editor-ai/AiEditor";
 import { ImageEditorProvider } from "./context/ImageEditorContext";
+import Home from "./components/Home";
 
 export const router = createHashRouter([
     {
@@ -22,9 +23,9 @@ export const router = createHashRouter([
         children: [
             { path: 'update', element: <Update/>, },
             { path: 'about', element: <About/>, },
-            { path: '/', element: <About/>, },
+            { path: '/', element: <Home/>, },
             { path: 'upload', element: <UploadImage /> },
-            { path: 'all-files', element: <AllFiles /> },
+            { path: 'files', element: <AllFiles /> },
             // { path: 'editor-cop-1205', element: <ImageEditor /> },
             // { path: 'frame', element: 
             // <Gallery /> 

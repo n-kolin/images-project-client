@@ -2,61 +2,187 @@
 
 import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router"
-import "../css/AboutPage.css"
+import "../css/About.css"
 
-const AboutPage = () => {
+interface ImageFilters {
+  transform?: {
+    rotation?: number
+    scale?: number
+    flipX?: boolean
+    flipY?: boolean
+  }
+  crop?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  filter?: {
+    brightness?: number
+    contrast?: number
+    saturation?: number
+    blur?: number
+    grayscale?: number
+  }
+  overlay?: {
+    color: string
+    blendMode: string
+  }
+  border?: {
+    width: number
+    color: string
+    style: string
+  }
+  shadow?: {
+    offsetX: number
+    offsetY: number
+    blur: number
+    color: string
+  }
+  textLayer?: {
+    text: string
+    x: number
+    y: number
+    fontSize: number
+    color: string
+    fontFamily?: string
+    fontWeight?: string
+    textAlign?: string
+  }
+}
+
+const About = () => {
   const navigate = useNavigate()
   const [visibleElements, setVisibleElements] = useState<number[]>([])
   const [demoStep, setDemoStep] = useState(0)
   const [demoText, setDemoText] = useState("")
   const [isTyping, setIsTyping] = useState(false)
-  const [showBorder, setShowBorder] = useState(false)
-  const [showText, setShowText] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [appliedFilters, setAppliedFilters] = useState<ImageFilters>({})
+  const [chatMessages, setChatMessages] = useState<string[]>([])
+  const [currentTypingMessage, setCurrentTypingMessage] = useState("")
+  const [isTypingMessage, setIsTypingMessage] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageRef = useRef<HTMLImageElement | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Demo text for the AI editor simulation
-  const demoPrompts = [
-    "Add blue border to image",
-    "Add text 'Summer Vacation'",
-    "Make colors more vibrant",
-    "Add vintage filter effect",
+  // URL של התמונה שתוצג
+  const imageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+
+  // Demo commands that build upon each other
+  const demoCommands = [
+    {
+      text: "Add blue border to image",
+      filters: {
+        border: {
+          width: 20,
+          color: "#3b82f6",
+          style: "solid",
+        },
+      },
+      response: "Perfect! I'm adding a beautiful blue border to your image. This will help frame the content nicely.",
+    },
+    {
+      text: "Add text 'Summer Vacation'",
+      filters: {
+        textLayer: {
+          text: "Summer Vacation",
+          x: 200,
+          y: 150,
+          fontSize: 36,
+          color: "#ffffff",
+          fontFamily: "Inter",
+          fontWeight: "bold",
+          textAlign: "center",
+        },
+      },
+      response:
+        "Great idea! Adding 'Summer Vacation' text to your image. I'll place it in the center with a nice white color.",
+    },
+    {
+      text: "Make text larger and golden",
+      filters: {
+        textLayer: {
+          text: "Summer Vacation",
+          x: 200,
+          y: 150,
+          fontSize: 48,
+          color: "#ffd700",
+          fontFamily: "Inter",
+          fontWeight: "bold",
+          textAlign: "center",
+        },
+      },
+      response:
+        "Excellent choice! Making the text larger and changing it to a beautiful golden color. This will make it really stand out!",
+    },
+    {
+      text: "Add shadow to text",
+      filters: {
+        shadow: {
+          offsetX: 3,
+          offsetY: 3,
+          blur: 8,
+          color: "rgba(0, 0, 0, 0.7)",
+        },
+      },
+      response:
+        "Adding a subtle shadow effect to the text. This will give it more depth and make it easier to read against any background.",
+    },
+    {
+      text: "Increase brightness",
+      filters: {
+        filter: {
+          brightness: 1.3,
+          contrast: 1.1,
+        },
+      },
+      response:
+        "Brightening up the entire image and adding some contrast. This will make the colors more vibrant and the image more appealing!",
+    },
   ]
 
   useEffect(() => {
-    // Animate page elements
+    // Animate elements one by one
     const timeouts: number[] = []
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 6; i++) {
       const timeout = setTimeout(() => {
         setVisibleElements((prev) => [...prev, i])
-      }, i * 200)
+      }, i * 300)
       timeouts.push(timeout)
     }
 
     // Load demo image
-    imageRef.current = new Image()
-    imageRef.current.src = "/placeholder.svg?height=300&width=400"
-    imageRef.current.crossOrigin = "anonymous"
-    imageRef.current.onload = () => {
-      drawImageOnCanvas()
-    }
-
-    // Start demo after page loads
-    const demoTimeout = setTimeout(() => {
-      startDemo()
-    }, 2000)
-
-    timeouts.push(demoTimeout)
+    loadImage()
 
     return () => {
       timeouts.forEach((timeout) => clearTimeout(timeout))
     }
   }, [])
 
-  // Draw the image on canvas
-  const drawImageOnCanvas = () => {
-    if (!canvasRef.current || !imageRef.current) return
+  const loadImage = () => {
+    imageRef.current = new Image()
+    imageRef.current.src = imageUrl
+    imageRef.current.crossOrigin = "anonymous"
+    imageRef.current.onload = () => {
+      drawImageOnCanvas()
+      // Start demo after image loads
+      setTimeout(() => {
+        startDemo()
+      }, 1000)
+    }
+    imageRef.current.onerror = () => {
+      drawFallbackImage()
+      // Start demo even if image fails to load
+      setTimeout(() => {
+        startDemo()
+      }, 1000)
+    }
+  }
+
+  const drawFallbackImage = () => {
+    if (!canvasRef.current) return
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext("2d")
@@ -65,78 +191,227 @@ const AboutPage = () => {
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Draw image
-    ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height)
+    // Draw a gradient background
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+    gradient.addColorStop(0, "#87ceeb")
+    gradient.addColorStop(0.5, "#98d8e8")
+    gradient.addColorStop(1, "#f0f8ff")
 
-    // Draw blue border if needed
-    if (showBorder) {
-      ctx.strokeStyle = "#3b82f6"
-      ctx.lineWidth = 20
-      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20)
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Draw mountains
+    ctx.fillStyle = "#8b7355"
+    ctx.beginPath()
+    ctx.moveTo(0, canvas.height * 0.7)
+    ctx.lineTo(canvas.width * 0.3, canvas.height * 0.4)
+    ctx.lineTo(canvas.width * 0.7, canvas.height * 0.5)
+    ctx.lineTo(canvas.width, canvas.height * 0.6)
+    ctx.lineTo(canvas.width, canvas.height * 0.7)
+    ctx.closePath()
+    ctx.fill()
+
+    // Draw ground
+    ctx.fillStyle = "#90ee90"
+    ctx.fillRect(0, canvas.height * 0.7, canvas.width, canvas.height * 0.3)
+
+    // Draw sun
+    ctx.fillStyle = "#ffd700"
+    ctx.beginPath()
+    ctx.arc(canvas.width * 0.8, canvas.height * 0.25, 25, 0, Math.PI * 2)
+    ctx.fill()
+
+    applyFiltersToCanvas(ctx, canvas)
+  }
+
+  const drawImageOnCanvas = () => {
+    if (!canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    if (!imageRef.current) {
+      drawFallbackImage()
+      return
     }
 
-    // Draw text if needed
-    if (showText) {
-      ctx.font = "bold 36px Inter"
-      ctx.fillStyle = "#ffffff"
-      ctx.textAlign = "center"
+    try {
+      // Apply filters first
+      if (appliedFilters.filter) {
+        const { brightness = 1, contrast = 1, saturation = 1, blur = 0, grayscale = 0 } = appliedFilters.filter
+        ctx.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) blur(${blur}px) grayscale(${grayscale})`
+      }
+
+      // Draw image
+      ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height)
+
+      // Reset filter
+      ctx.filter = "none"
+    } catch (error) {
+      console.warn("Error drawing image, using fallback:", error)
+      drawFallbackImage()
+      return
+    }
+
+    applyFiltersToCanvas(ctx, canvas)
+  }
+
+  const applyFiltersToCanvas = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    // Apply border
+    if (appliedFilters.border) {
+      const { width, color, style } = appliedFilters.border
+      ctx.strokeStyle = color
+      ctx.lineWidth = width
+      if (style === "dashed") {
+        ctx.setLineDash([10, 5])
+      } else {
+        ctx.setLineDash([])
+      }
+      ctx.strokeRect(width / 2, width / 2, canvas.width - width, canvas.height - width)
+    }
+
+    // Apply text with shadow
+    if (appliedFilters.textLayer) {
+      const {
+        text,
+        x,
+        y,
+        fontSize,
+        color,
+        fontFamily = "Inter",
+        fontWeight = "normal",
+        textAlign = "center",
+      } = appliedFilters.textLayer
+
+      ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}, Arial, sans-serif`
+      ctx.fillStyle = color
+      ctx.textAlign = textAlign as CanvasTextAlign
       ctx.textBaseline = "middle"
 
-      // Text shadow for better visibility
-      ctx.shadowColor = "rgba(0, 0, 0, 0.7)"
-      ctx.shadowBlur = 10
-      ctx.shadowOffsetX = 2
-      ctx.shadowOffsetY = 2
+      // Apply shadow if exists
+      if (appliedFilters.shadow) {
+        const { offsetX, offsetY, blur, color: shadowColor } = appliedFilters.shadow
+        ctx.shadowColor = shadowColor
+        ctx.shadowBlur = blur
+        ctx.shadowOffsetX = offsetX
+        ctx.shadowOffsetY = offsetY
+      }
 
-      ctx.fillText("Summer Vacation", canvas.width / 2, canvas.height / 2)
+      ctx.fillText(text, x, y)
 
       // Reset shadow
       ctx.shadowColor = "transparent"
+      ctx.shadowBlur = 0
+      ctx.shadowOffsetX = 0
+      ctx.shadowOffsetY = 0
+    }
+
+    // Apply overlay
+    if (appliedFilters.overlay) {
+      const { color, blendMode } = appliedFilters.overlay
+      ctx.globalCompositeOperation = blendMode as GlobalCompositeOperation
+      ctx.fillStyle = color
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.globalCompositeOperation = "source-over"
     }
   }
 
-  // Handle demo steps
   useEffect(() => {
     drawImageOnCanvas()
-  }, [showBorder, showText])
+  }, [appliedFilters])
+
+  const typeMessage = (message: string, callback: () => void) => {
+    setIsTypingMessage(true)
+    setCurrentTypingMessage("")
+
+    let currentIndex = 0
+    const typingInterval = setInterval(() => {
+      if (currentIndex < message.length) {
+        setCurrentTypingMessage(message.slice(0, currentIndex + 1))
+        currentIndex++
+      } else {
+        clearInterval(typingInterval)
+        setIsTypingMessage(false)
+        // Add to chat messages
+        setChatMessages((prev) => [...prev, message])
+        setCurrentTypingMessage("")
+        callback()
+      }
+    }, 50) // Faster typing speed
+  }
 
   const startDemo = () => {
-    const currentPrompt = demoPrompts[demoStep % demoPrompts.length]
+    if (demoStep >= demoCommands.length) {
+      // Reset and start over
+      setAppliedFilters({})
+      setChatMessages([])
+      setDemoStep(0)
+      setTimeout(() => {
+        runNextDemoStep(0)
+      }, 2000)
+      return
+    }
+
+    runNextDemoStep(demoStep)
+  }
+
+  const runNextDemoStep = (step: number) => {
+    const currentCommand = demoCommands[step]
     setIsTyping(true)
     setDemoText("")
 
-    // Typing animation
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+
+    // Typing animation for input
     let currentIndex = 0
     const typingInterval = setInterval(() => {
-      if (currentIndex < currentPrompt.length) {
-        setDemoText(currentPrompt.slice(0, currentIndex + 1))
+      if (currentIndex < currentCommand.text.length) {
+        setDemoText(currentCommand.text.slice(0, currentIndex + 1))
         currentIndex++
       } else {
         clearInterval(typingInterval)
         setIsTyping(false)
 
-        // Show processing overlay
+        // Show processing state
         setTimeout(() => {
-          // Apply the effect based on the current step
-          if (demoStep % demoPrompts.length === 0) {
-            setShowBorder(true)
-          } else if (demoStep % demoPrompts.length === 1) {
-            setShowText(true)
-          }
+          setIsProcessing(true)
 
-          // Move to next step after 3 seconds
+          // Type the response message
           setTimeout(() => {
-            setDemoStep((prev) => prev + 1)
+            typeMessage(currentCommand.response, () => {
+              // Apply the filters after message is typed
+              setTimeout(() => {
+                setAppliedFilters((prev) => ({
+                  ...prev,
+                  ...currentCommand.filters,
+                }))
 
-            // Reset effects if we're starting over
-            if ((demoStep + 1) % demoPrompts.length === 0) {
-              setShowBorder(false)
-              setShowText(false)
-            }
+                setIsProcessing(false)
 
-            startDemo()
-          }, 3000)
-        }, 1500)
+                // Wait longer before next step to let users read the message
+                setTimeout(() => {
+                  setDemoStep(step + 1)
+                  if (step + 1 < demoCommands.length) {
+                    runNextDemoStep(step + 1)
+                  } else {
+                    // Wait longer before resetting
+                    setTimeout(() => {
+                      startDemo()
+                    }, 4000)
+                  }
+                }, 3000) // Increased wait time
+              }, 1000)
+            })
+          }, 500)
+        }, 1000)
       }
     }, 100)
   }
@@ -163,61 +438,85 @@ const AboutPage = () => {
         {/* Demo Section */}
         <section className={`demo-section ${visibleElements.includes(1) ? "visible" : ""}`}>
           <div className="demo-container">
-            <div className="demo-explanation">
-              <h3>Real-time AI Image Editing</h3>
-              <p>
-                Our AI editor understands natural language commands and applies them to your images in real-time. Simply
-                describe what you want to change, and watch as the AI transforms your image accordingly.
-              </p>
-              <div className="demo-steps">
-                <div className="demo-step">
-                  <div className="step-number">1</div>
-                  <div className="step-text">Type your editing request</div>
-                </div>
-                <div className="demo-step">
-                  <div className="step-number">2</div>
-                  <div className="step-text">AI processes your request</div>
-                </div>
-                <div className="demo-step">
-                  <div className="step-number">3</div>
-                  <div className="step-text">See results instantly</div>
-                </div>
-              </div>
+            <div className="image-editor-header">
+              <h1>Image Editor</h1>
             </div>
 
-            <div className="demo-image-container">
-              <canvas ref={canvasRef} width="400" height="300" className="demo-canvas"></canvas>
-              <div className={`demo-overlay ${demoStep % 2 === 0 && isTyping === false ? "visible" : ""}`}>
-                <div className="ai-processing">
-                  <div className="ai-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M9 12l2 2 4-4" />
-                      <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                      <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                    </svg>
+            <div className="demo-layout">
+              {/* Left Side - Image */}
+              <div className="demo-image-side">
+                <div className="demo-image-container">
+                  <canvas ref={canvasRef} width="400" height="300" className="demo-canvas"></canvas>
+                </div>
+
+                <div className="ai-design-tool">
+                  <h2 className="ai-tool-title">AI Image Editor</h2>
+
+                  <div className="ai-form">
+                    <div className="input-container">
+                      <textarea
+                        ref={textareaRef}
+                        value={demoText}
+                        placeholder="Describe your edit..."
+                        className="ai-textarea"
+                        readOnly
+                      />
+                    </div>
+                    <button
+                      className={`ai-submit-button ${isProcessing ? "loading" : ""}`}
+                      disabled={isProcessing || isTyping}
+                    >
+                      {isProcessing ? "" : "Apply Edit"}
+                    </button>
                   </div>
-                  <span>AI Processing...</span>
                 </div>
               </div>
-            </div>
 
-            <div className="demo-controls">
-              <div className="demo-input-container">
-                <input
-                  type="text"
-                  value={demoText}
-                  placeholder="Describe your edit..."
-                  className="demo-input"
-                  readOnly
-                />
-                <div className={`typing-cursor ${isTyping ? "active" : ""}`}></div>
+              {/* Right Side - Chat */}
+              <div className="demo-chat-side">
+                <div className="chat-header">
+                  <h3>AI Assistant</h3>
+                  <div className="chat-status">
+                    <div className="status-dot"></div>
+                    <span>Online</span>
+                  </div>
+                </div>
+
+                <div className="chat-messages">
+                  {chatMessages.map((message, index) => (
+                    <div key={index} className="chat-message-item">
+                      <div className="message-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path d="M9 12l2 2 4-4" />
+                          <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                          <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                        </svg>
+                      </div>
+                      <div className="message-content">
+                        <div className="message-text">{message}</div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {isTypingMessage && (
+                    <div className="chat-message-item typing">
+                      <div className="message-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path d="M9 12l2 2 4-4" />
+                          <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                          <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                        </svg>
+                      </div>
+                      <div className="message-content">
+                        <div className="message-text">
+                          {currentTypingMessage}
+                          <span className="typing-cursor">|</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-              <button className="demo-button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                </svg>
-                Apply Edit
-              </button>
             </div>
 
             <div className="demo-info">
@@ -229,19 +528,18 @@ const AboutPage = () => {
                 </svg>
               </div>
               <p>
-                <strong>How it works:</strong> Our AI analyzes your image and the text command, then applies appropriate
-                transformations. The system supports borders, text overlays, color adjustments, filters, and much more -
-                all through simple text commands.
+                <strong>Progressive Editing:</strong> Watch how each command builds upon the previous ones. The AI
+                assistant guides you through each step, explaining what it's doing and why.
               </p>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className={`features-detailed ${visibleElements.includes(6) ? "visible" : ""}`}>
+        <section className={`features-detailed ${visibleElements.includes(2) ? "visible" : ""}`}>
           <h2 className="section-title">Powerful Editing Features</h2>
           <div className="features-list">
-            <div className={`feature-item ${visibleElements.includes(7) ? "visible" : ""}`}>
+            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -255,156 +553,50 @@ const AboutPage = () => {
               </div>
             </div>
 
-            <div className={`feature-item ${visibleElements.includes(7) ? "visible" : ""}`}>
-              <div className="feature-icon-small">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                  <line x1="9" y1="9" x2="9.01" y2="9" />
-                  <line x1="15" y1="9" x2="15.01" y2="9" />
-                </svg>
-              </div>
-              <div className="feature-content">
-                <h4>Smart Object Removal</h4>
-                <p>Easily remove unwanted objects or people from your images with AI-powered content-aware fill.</p>
-              </div>
-            </div>
-
-            <div className={`feature-item ${visibleElements.includes(7) ? "visible" : ""}`}>
-              <div className="feature-icon-small">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M12 2v8m0 4v8M4.93 4.93l5.66 5.66m2.83 2.83l5.66 5.66M2 12h8m4 0h8M4.93 19.07l5.66-5.66m2.83-2.83l5.66-5.66" />
-                </svg>
-              </div>
-              <div className="feature-content">
-                <h4>Color Correction</h4>
-                <p>Adjust brightness, contrast, saturation, and apply color filters with natural language.</p>
-              </div>
-            </div>
-
-            <div className={`feature-item ${visibleElements.includes(7) ? "visible" : ""}`}>
+            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
               </div>
               <div className="feature-content">
-                <h4>Natural Language</h4>
-                <p>Edit images using simple, natural language commands - no technical skills required.</p>
+                <h4>Progressive Editing</h4>
+                <p>Build complex edits step by step. Each command enhances and builds upon previous changes.</p>
+              </div>
+            </div>
+
+            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+              <div className="feature-icon-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M12 2v8m0 4v8M4.93 4.93l5.66 5.66m2.83 2.83l5.66 5.66M2 12h8m4 0h8M4.93 19.07l5.66-5.66m2.83-2.83l5.66-5.66" />
+                </svg>
+              </div>
+              <div className="feature-content">
+                <h4>Smart Filters</h4>
+                <p>Apply brightness, contrast, saturation adjustments and creative filters with natural language.</p>
+              </div>
+            </div>
+
+            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+              <div className="feature-icon-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <line x1="10" y1="9" x2="8" y2="9" />
+                </svg>
+              </div>
+              <div className="feature-content">
+                <h4>Text & Typography</h4>
+                <p>Add text with custom fonts, sizes, colors, and effects. Modify existing text easily.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Code Explanation */}
-        <section className={`code-explanation ${visibleElements.includes(5) ? "visible" : ""}`}>
-          <h2 className="section-title">How The Code Works</h2>
-
-          <div className="code-block">
-            <h3>Canvas-Based Image Editing</h3>
-            <p>
-              Our demo uses HTML5 Canvas to manipulate images in real-time. Here's how the core functionality works:
-            </p>
-            <pre className="code-snippet">
-              {`// Draw the image on canvas
-const drawImageOnCanvas = () => {
-  const canvas = canvasRef.current;
-  const ctx = canvas.getContext("2d");
-  
-  // Clear canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw image
-  ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-  
-  // Draw blue border if needed
-  if (showBorder) {
-    ctx.strokeStyle = "#3b82f6";
-    ctx.lineWidth = 20;
-    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-  }
-  
-  // Draw text if needed
-  if (showText) {
-    ctx.font = "bold 36px Inter";
-    ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.fillText("Summer Vacation", canvas.width / 2, canvas.height / 2);
-  }
-}`}
-            </pre>
-          </div>
-
-          <div className="code-block">
-            <h3>Animation and Timing</h3>
-            <p>The demo uses React's useState and useEffect hooks to manage state and timing:</p>
-            <pre className="code-snippet">
-              {`// Typing animation
-let currentIndex = 0;
-const typingInterval = setInterval(() => {
-  if (currentIndex < currentPrompt.length) {
-    setDemoText(currentPrompt.slice(0, currentIndex + 1));
-    currentIndex++;
-  } else {
-    clearInterval(typingInterval);
-    setIsTyping(false);
-    
-    // Show processing overlay
-    setTimeout(() => {
-      // Apply the effect based on the current step
-      if (demoStep % demoPrompts.length === 0) {
-        setShowBorder(true);
-      } else if (demoStep % demoPrompts.length === 1) {
-        setShowText(true);
-      }
-      
-      // Move to next step after 3 seconds
-      setTimeout(() => {
-        setDemoStep((prev) => prev + 1);
-        startDemo();
-      }, 3000);
-    }, 1500);
-  }
-}, 100);`}
-            </pre>
-          </div>
-
-          <div className="code-block">
-            <h3>Scroll-Triggered Animations</h3>
-            <p>Elements appear as you scroll using CSS transitions and React state:</p>
-            <pre className="code-snippet">
-              {`// CSS for scroll animations
-.features-detailed {
-  opacity: 0;
-  transform: translateY(60px);
-  transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.features-detailed.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-// React code to trigger animations
-useEffect(() => {
-  const timeouts = [];
-  for (let i = 0; i < 8; i++) {
-    const timeout = setTimeout(() => {
-      setVisibleElements((prev) => [...prev, i]);
-    }, i * 200);
-    timeouts.push(timeout);
-  }
-  
-  return () => {
-    timeouts.forEach((timeout) => clearTimeout(timeout));
-  };
-}, []);`}
-            </pre>
-          </div>
-        </section>
-
         {/* CTA Section */}
-        <section className="cta-section">
+        <section className={`cta-section ${visibleElements.includes(4) ? "visible" : ""}`}>
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Images?</h2>
             <p className="cta-description">
@@ -423,4 +615,4 @@ useEffect(() => {
   )
 }
 
-export default AboutPage
+export default About
