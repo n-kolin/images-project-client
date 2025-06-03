@@ -24,7 +24,7 @@ const Menu = () => {
           <div className="logo-container">
             <div className="logo-wrapper">
               <div className="logo-icon">
-                <img src="/logo2.gif?height=32&width=32" alt="Logo" className="logo-img" />
+                <img src="/lll.gif?height=32&width=32" alt="Logo" className="logo-img" />
                 <div className="logo-inner"></div>
               </div>
               <h1 className="logo-text">
