@@ -313,3 +313,12 @@
     animation: subtleSlideDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   
+
+  
+.logo-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+}
