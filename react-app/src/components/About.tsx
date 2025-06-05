@@ -59,17 +59,18 @@ const About = () => {
   const [isTyping, setIsTyping] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [appliedFilters, setAppliedFilters] = useState<ImageFilters>({})
-  const [chatMessages, setChatMessages] = useState<string[]>([])
-  const [currentTypingMessage, setCurrentTypingMessage] = useState("")
-  const [isTypingMessage, setIsTypingMessage] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageRef = useRef<HTMLImageElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
+  // Refs for scroll animation
+  const featuresRef = useRef<HTMLElement>(null)
+  const ctaRef = useRef<HTMLElement>(null)
+
   // URL של התמונה שתוצג
   const imageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
 
-  // Demo commands that build upon each other
+  // Demo commands that build upon each other - only user requests
   const demoCommands = [
     {
       text: "Add blue border to image",
@@ -80,7 +81,6 @@ const About = () => {
           style: "solid",
         },
       },
-      response: "Perfect! I'm adding a beautiful blue border to your image. This will help frame the content nicely.",
     },
     {
       text: "Add text 'Summer Vacation'",
@@ -96,8 +96,6 @@ const About = () => {
           textAlign: "center",
         },
       },
-      response:
-        "Great idea! Adding 'Summer Vacation' text to your image. I'll place it in the center with a nice white color.",
     },
     {
       text: "Make text larger and golden",
@@ -113,8 +111,6 @@ const About = () => {
           textAlign: "center",
         },
       },
-      response:
-        "Excellent choice! Making the text larger and changing it to a beautiful golden color. This will make it really stand out!",
     },
     {
       text: "Add shadow to text",
@@ -126,8 +122,6 @@ const About = () => {
           color: "rgba(0, 0, 0, 0.7)",
         },
       },
-      response:
-        "Adding a subtle shadow effect to the text. This will give it more depth and make it easier to read against any background.",
     },
     {
       text: "Increase brightness",
@@ -137,19 +131,50 @@ const About = () => {
           contrast: 1.1,
         },
       },
-      response:
-        "Brightening up the entire image and adding some contrast. This will make the colors more vibrant and the image more appealing!",
     },
   ]
 
+  // Scroll animation observer
   useEffect(() => {
-    // Animate elements one by one
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (entry.target === featuresRef.current) {
+            setTimeout(() => {
+              setVisibleElements((prev) => [...prev, 2])
+            }, 300)
+            setTimeout(() => {
+              setVisibleElements((prev) => [...prev, 3])
+            }, 800) // Stagger the feature items
+          }
+          if (entry.target === ctaRef.current) {
+            setTimeout(() => {
+              setVisibleElements((prev) => [...prev, 4])
+            }, 400)
+          }
+        }
+      })
+    }, observerOptions)
+
+    if (featuresRef.current) observer.observe(featuresRef.current)
+    if (ctaRef.current) observer.observe(ctaRef.current)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    // Animate initial elements
     const timeouts: number[] = []
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 2; i++) {
       const timeout = setTimeout(() => {
         setVisibleElements((prev) => [...prev, i])
-      }, i * 300)
+      }, i * 800) // Changed from 300 to 800
       timeouts.push(timeout)
     }
 
@@ -324,31 +349,21 @@ const About = () => {
     drawImageOnCanvas()
   }, [appliedFilters])
 
-  const typeMessage = (message: string, callback: () => void) => {
-    setIsTypingMessage(true)
-    setCurrentTypingMessage("")
-
-    let currentIndex = 0
-    const typingInterval = setInterval(() => {
-      if (currentIndex < message.length) {
-        setCurrentTypingMessage(message.slice(0, currentIndex + 1))
-        currentIndex++
-      } else {
-        clearInterval(typingInterval)
-        setIsTypingMessage(false)
-        // Add to chat messages
-        setChatMessages((prev) => [...prev, message])
-        setCurrentTypingMessage("")
-        callback()
-      }
-    }, 50) // Faster typing speed
-  }
-
   const startDemo = () => {
     if (demoStep >= demoCommands.length) {
+      // Clear canvas completely before reset
+      if (canvasRef.current) {
+        const ctx = canvasRef.current.getContext("2d")
+        if (ctx) {
+          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+          // Draw the original image without any filters
+          if (imageRef.current) {
+            ctx.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height)
+          }
+        }
+      }
       // Reset and start over
       setAppliedFilters({})
-      setChatMessages([])
       setDemoStep(0)
       setTimeout(() => {
         runNextDemoStep(0)
@@ -384,33 +399,28 @@ const About = () => {
         setTimeout(() => {
           setIsProcessing(true)
 
-          // Type the response message
+          // Apply the filters after message is typed
           setTimeout(() => {
-            typeMessage(currentCommand.response, () => {
-              // Apply the filters after message is typed
-              setTimeout(() => {
-                setAppliedFilters((prev) => ({
-                  ...prev,
-                  ...currentCommand.filters,
-                }))
+            setAppliedFilters((prev) => ({
+              ...prev,
+              ...currentCommand.filters,
+            }))
 
-                setIsProcessing(false)
+            setIsProcessing(false)
 
-                // Wait longer before next step to let users read the message
+            // Wait before next step
+            setTimeout(() => {
+              setDemoStep(step + 1)
+              if (step + 1 < demoCommands.length) {
+                runNextDemoStep(step + 1)
+              } else {
+                // Wait before resetting
                 setTimeout(() => {
-                  setDemoStep(step + 1)
-                  if (step + 1 < demoCommands.length) {
-                    runNextDemoStep(step + 1)
-                  } else {
-                    // Wait longer before resetting
-                    setTimeout(() => {
-                      startDemo()
-                    }, 4000)
-                  }
-                }, 3000) // Increased wait time
-              }, 1000)
-            })
-          }, 500)
+                  startDemo()
+                }, 4000)
+              }
+            }, 2000)
+          }, 1000)
         }, 1000)
       }
     }, 100)
@@ -438,17 +448,16 @@ const About = () => {
         {/* Demo Section */}
         <section className={`demo-section ${visibleElements.includes(1) ? "visible" : ""}`}>
           <div className="demo-container">
-            <div className="image-editor-header">
-              <h1>Image Editor</h1>
-            </div>
-
             <div className="demo-layout">
               {/* Left Side - Image */}
               <div className="demo-image-side">
                 <div className="demo-image-container">
                   <canvas ref={canvasRef} width="400" height="300" className="demo-canvas"></canvas>
                 </div>
+              </div>
 
+              {/* Right Side - Input Controls */}
+              <div className="demo-controls-side">
                 <div className="ai-design-tool">
                   <h2 className="ai-tool-title">AI Image Editor</h2>
 
@@ -471,52 +480,6 @@ const About = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Right Side - Chat */}
-              <div className="demo-chat-side">
-                <div className="chat-header">
-                  <h3>AI Assistant</h3>
-                  <div className="chat-status">
-                    <div className="status-dot"></div>
-                    <span>Online</span>
-                  </div>
-                </div>
-
-                <div className="chat-messages">
-                  {chatMessages.map((message, index) => (
-                    <div key={index} className="chat-message-item">
-                      <div className="message-avatar">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M9 12l2 2 4-4" />
-                          <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                          <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                        </svg>
-                      </div>
-                      <div className="message-content">
-                        <div className="message-text">{message}</div>
-                      </div>
-                    </div>
-                  ))}
-
-                  {isTypingMessage && (
-                    <div className="chat-message-item typing">
-                      <div className="message-avatar">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M9 12l2 2 4-4" />
-                          <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                          <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                        </svg>
-                      </div>
-                      <div className="message-content">
-                        <div className="message-text">
-                          {currentTypingMessage}
-                          <span className="typing-cursor">|</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
 
             <div className="demo-info">
@@ -528,15 +491,15 @@ const About = () => {
                 </svg>
               </div>
               <p>
-                <strong>Progressive Editing:</strong> Watch how each command builds upon the previous ones. The AI
-                assistant guides you through each step, explaining what it's doing and why.
+                <strong>Progressive Editing:</strong> Watch how each command builds upon the previous ones. Each user
+                request directly modifies the image, creating a seamless editing experience.
               </p>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className={`features-detailed ${visibleElements.includes(2) ? "visible" : ""}`}>
+        <section ref={featuresRef} className={`features-detailed ${visibleElements.includes(2) ? "visible" : ""}`}>
           <h2 className="section-title">Powerful Editing Features</h2>
           <div className="features-list">
             <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
@@ -596,7 +559,7 @@ const About = () => {
         </section>
 
         {/* CTA Section */}
-        <section className={`cta-section ${visibleElements.includes(4) ? "visible" : ""}`}>
+        <section ref={ctaRef} className={`cta-section ${visibleElements.includes(4) ? "visible" : ""}`}>
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Images?</h2>
             <p className="cta-description">
