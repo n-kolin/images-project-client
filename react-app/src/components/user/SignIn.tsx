@@ -44,10 +44,8 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
     console.log(data)
 
-    console.log("jj")
 
     const res = await dispatch(login(data))
-    console.log("jjg")
 
     console.log(res)
 

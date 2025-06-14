@@ -55,7 +55,6 @@ const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
     console.log(res)
 
     if (res.meta.requestStatus === "fulfilled") {
-      console.log("jjg")
       console.log(res)
       dispatch(setCurrentUser(res.payload.userDto))
       sessionStorage.setItem("accessToken", res.payload.token)
