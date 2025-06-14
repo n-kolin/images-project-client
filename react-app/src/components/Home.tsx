@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router"
 import "../css/Home.css"
@@ -36,7 +33,6 @@ const Home = () => {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [isSignIn, setIsSignIn] = useState(false)
 
-  // Refs for scroll animation
   const featuresRef = useRef<HTMLElement>(null)
   const statsRef = useRef<HTMLElement>(null)
   const testimonialsRef = useRef<HTMLElement>(null)
@@ -44,7 +40,6 @@ const Home = () => {
   const benefitsRef = useRef<HTMLElement>(null)
   const ctaRef = useRef<HTMLElement>(null)
 
-  // Target values for animated stats
   const targetStats = {
     users: 2847,
     images: 156420,
@@ -52,12 +47,10 @@ const Home = () => {
   }
 
   useEffect(() => {
-    // Load testimonials from localStorage
     const savedTestimonials = localStorage.getItem("testimonials")
     if (savedTestimonials) {
       setTestimonials(JSON.parse(savedTestimonials))
     } else {
-      // Default testimonials - reduced to 10 total
       const defaultTestimonials: Testimonial[] = [
         {
           id: 1,
@@ -145,7 +138,6 @@ const Home = () => {
     }
   }, [])
 
-  // Scroll animation observer
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -166,7 +158,6 @@ const Home = () => {
           }
           if (entry.target === howItWorksRef.current) {
             setTimeout(() => setVisibleElements((prev) => [...prev, 5]), 200)
-            // Steps animation - sequential with faster timing
             setTimeout(() => setVisibleElements((prev) => [...prev, 6]), 300) // Step 1 from left
             setTimeout(() => setVisibleElements((prev) => [...prev, 7]), 500) // Step 2 from right
             setTimeout(() => setVisibleElements((prev) => [...prev, 8]), 700) // Step 3 from left
@@ -197,13 +188,12 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    // Animate initial hero section
     setTimeout(() => setVisibleElements([0]), 300)
   }, [])
 
   const animateStats = () => {
-    const duration = 2500 // Reduced from 4000 to 2500 milliseconds
-    const steps = 120 // More steps for smoother animation
+    const duration = 2500 
+    const steps = 120 
     const stepDuration = duration / steps
 
     let currentStep = 0
@@ -226,7 +216,7 @@ const Home = () => {
 
   const handleGetStarted = () => {
     setShowAuthModal(true)
-    setIsSignIn(false) // Open sign up form
+    setIsSignIn(false) 
   }
 
   const handleLearnMore = () => {
@@ -263,7 +253,6 @@ const Home = () => {
     setShowTestimonialForm(false)
   }
 
-  // Get current 3 testimonials for sliding window
   const getCurrentTestimonials = () => {
     if (!testimonials || testimonials.length === 0) {
       return []
@@ -300,7 +289,6 @@ const Home = () => {
       </div>
 
       <div className="home-container">
-        {/* Hero Section */}
         <section className={`hero-section ${visibleElements.includes(0) ? "visible" : ""}`}>
           <div className="hero-content">
             <h1 className="hero-title">
@@ -332,7 +320,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Features Section */}
         <section ref={featuresRef} className={`features-section ${visibleElements.includes(1) ? "visible" : ""}`}>
           <h2 className="section-title colorful-text">Complete Image Management Solution</h2>
           <p className="section-subtitle">
@@ -384,7 +371,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
         <section ref={statsRef} className={`stats-section ${visibleElements.includes(4) ? "visible" : ""}`}>
           <div className="stats-container">
             <h2 className="stats-title colorful-text">Trusted by Thousands of Users Worldwide</h2>
@@ -408,14 +394,12 @@ const Home = () => {
           </div>
         </section>
 
-        {/* How It Works Section */}
         <section ref={howItWorksRef} className={`how-it-works-section ${visibleElements.includes(5) ? "visible" : ""}`}>
           <h2 className="section-title colorful-text">How Our Platform Works</h2>
           <p className="section-subtitle">
             From upload to AI-powered editing, experience a streamlined workflow designed for modern creators
           </p>
           <div className="steps-container">
-            {/* Step 1 - Left aligned */}
             <div className={`step-item step-left ${visibleElements.includes(6) ? "visible" : ""}`}>
               <div className="step-number colorful-number">01</div>
               <div className="step-content">
@@ -428,7 +412,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Step 2 - Right aligned */}
             <div className={`step-item step-right ${visibleElements.includes(7) ? "visible" : ""}`}>
               <div className="step-number colorful-number">02</div>
               <div className="step-content">
@@ -441,7 +424,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Step 3 - Left aligned */}
             <div className={`step-item step-left ${visibleElements.includes(8) ? "visible" : ""}`}>
               <div className="step-number colorful-number">03</div>
               <div className="step-content">
@@ -456,7 +438,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Benefits Section */}
         <section ref={benefitsRef} className={`benefits-section ${visibleElements.includes(9) ? "visible" : ""}`}>
           <div className="benefits-container">
             <div className="benefits-content">
@@ -527,7 +508,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Testimonials Section */}
         <section
           ref={testimonialsRef}
           className={`testimonials-section ${visibleElements.includes(11) ? "visible" : ""}`}
@@ -645,7 +625,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Final CTA Section */}
         <section ref={ctaRef} className={`final-cta-section ${visibleElements.includes(13) ? "visible" : ""}`}>
           <div className="cta-content">
             <h2 className="cta-title colorful-text">Ready to Transform Your Image Workflow?</h2>
@@ -666,7 +645,7 @@ const Home = () => {
         </section>
       </div>
 
-      {/* Auth Modal */}
+      {/* Ath Modal */}
       {showAuthModal && (
         <div className="auth-modal-overlay" onClick={() => setShowAuthModal(false)}>
           <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>

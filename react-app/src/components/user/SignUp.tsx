@@ -1,5 +1,3 @@
-"use client"
-
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
@@ -20,7 +18,6 @@ import "../../css/AuthForms.css"
 const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
   const loading = useSelector((state: StoreType) => state.users.loading)
 
-  //pass
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -43,7 +40,6 @@ const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const style = modalStyle
 
-  //register
   const dispatch = useDispatch<AppDispatch>()
 
   const onSubmit: SubmitHandler<UserType> = async (data) => {
@@ -63,10 +59,8 @@ const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
       console.log(res)
       dispatch(setCurrentUser(res.payload.userDto))
       sessionStorage.setItem("accessToken", res.payload.token)
-      console.log("ghj")
       onSuccess()
     } else {
-      //not success
       onSuccess()
       Swal.fire({
         icon: "error",

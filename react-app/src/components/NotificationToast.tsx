@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from "react"
 import "../css/NotificationToast.css"
 

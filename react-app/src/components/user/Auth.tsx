@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Modal, Box, Button } from "@mui/material"
 import SignIn from "./SignIn"
@@ -23,17 +21,15 @@ const Auth = () => {
     setOpen(false)
   }
 
-  //log out
   const dispatch = useDispatch<AppDispatch>()
 
   const navigate = useNavigate()
   const signOut = () => {
-    navigate("/") // ניתוב לעמוד הראשי
+    navigate("/")
     dispatch(clearCurrentUser())
     sessionStorage.removeItem("accessToken")
   }
 
-  //current user
   const currentUser = useSelector((state: StoreType) => state.auth.currentUser)
 
   const update = () => {
@@ -80,7 +76,6 @@ const Auth = () => {
             <span className="auth-button-text">Sign Out</span>
             <div className="auth-button-underline"></div>
           </Button>
-          {/* <Update /> */}
 
           <Button
             className="auth-styled-button"
@@ -101,28 +96,7 @@ const Auth = () => {
         aria-labelledby="auth-modal-title"
         aria-describedby="auth-modal-description"
       >
-        {/* 
-                X
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            onClick={() => { reset(); setOpen(false); }}
-                            sx={{
-                                borderRadius: '50%',
-                                minWidth: '0',
-                                height: '40px',
-                                padding: '6px',
-                                '&:hover': {
-                                    bgcolor: 'action.hover',
-                                }
-                            }}
-                        >
-                            <Close />
-                        </Button>
-                    </Box>
-                
-                
-                
-                */}
+        
         <Box sx={modalStyle}>
           {isSignIn ? (
             <div>

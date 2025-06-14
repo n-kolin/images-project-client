@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useDispatch } from "react-redux"
@@ -33,7 +31,6 @@ const FolderCard = ({
   useEffect(() => {
     if (isEditing && nameRef.current) {
       nameRef.current.focus()
-      // Select all text
       const range = document.createRange()
       range.selectNodeContents(nameRef.current)
       const selection = window.getSelection()

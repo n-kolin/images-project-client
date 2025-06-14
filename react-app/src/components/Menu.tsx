@@ -11,7 +11,6 @@ const Menu = () => {
   return (
     <>
       <header className="modern-header">
-        {/* Animated Background Elements */}
         <div className="bg-animation">
           <div className="floating-shape shape-1"></div>
           <div className="floating-shape shape-2"></div>
@@ -20,7 +19,6 @@ const Menu = () => {
         </div>
 
         <div className="header-content">
-          {/* Logo Section */}
           <div className="logo-container">
             <div className="logo-wrapper">
               <div className="logo-icon">
@@ -34,7 +32,6 @@ const Menu = () => {
             </div>
           </div>
 
-          {/* Navigation Menu - Enhanced Standard Style */}
           <nav className="main-navigation">
             <div className="nav-container">
               <Link to="/" className="nav-item">
@@ -77,7 +74,6 @@ const Menu = () => {
             </div>
           </nav>
 
-          {/* Auth Section */}
           <div className="auth-container">
             <Auth />
           </div>

@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { useState, type ChangeEvent } from "react"
 import axios from "axios"
@@ -12,7 +10,7 @@ import { useLocation, useNavigate } from "react-router"
 import "../../css/UploadImage.css"
 import { useNotificationHelpers } from "../../hooks/useNotification"
 
-const UploadImage: React.FC = () => {
+const UploadImage = () => {
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const path = searchParams.get("path") || ""

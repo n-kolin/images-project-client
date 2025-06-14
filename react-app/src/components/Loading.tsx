@@ -1,5 +1,4 @@
-import { CircularProgress, Typography } from "@mui/material";
-import React from "react";
+import { Typography } from "@mui/material";
 import './Loading.css'
 const Loading = () => {
     return (<>
@@ -13,8 +12,6 @@ const Loading = () => {
                 Good things take time... Loading your files!
             </Typography>
         </div >
-
-
     </>)
 }
 export default Loading;

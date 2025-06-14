@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router"
 import "../css/About.css"
@@ -63,14 +61,11 @@ const About = () => {
   const imageRef = useRef<HTMLImageElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Refs for scroll animation
   const featuresRef = useRef<HTMLElement>(null)
   const ctaRef = useRef<HTMLElement>(null)
 
-  // URL של התמונה שתוצג
   const imageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
 
-  // Demo commands that build upon each other - only user requests
   const demoCommands = [
     {
       text: "Add blue border to image",
@@ -134,7 +129,6 @@ const About = () => {
     },
   ]
 
-  // Scroll animation observer
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -150,7 +144,7 @@ const About = () => {
             }, 300)
             setTimeout(() => {
               setVisibleElements((prev) => [...prev, 3])
-            }, 800) // Stagger the feature items
+            }, 800) 
           }
           if (entry.target === ctaRef.current) {
             setTimeout(() => {
@@ -168,17 +162,15 @@ const About = () => {
   }, [])
 
   useEffect(() => {
-    // Animate initial elements
     const timeouts: number[] = []
 
     for (let i = 0; i < 2; i++) {
       const timeout = setTimeout(() => {
         setVisibleElements((prev) => [...prev, i])
-      }, i * 800) // Changed from 300 to 800
+      }, i * 800) 
       timeouts.push(timeout)
     }
 
-    // Load demo image
     loadImage()
 
     return () => {
@@ -192,14 +184,12 @@ const About = () => {
     imageRef.current.crossOrigin = "anonymous"
     imageRef.current.onload = () => {
       drawImageOnCanvas()
-      // Start demo after image loads
       setTimeout(() => {
         startDemo()
       }, 1000)
     }
     imageRef.current.onerror = () => {
       drawFallbackImage()
-      // Start demo even if image fails to load
       setTimeout(() => {
         startDemo()
       }, 1000)
@@ -213,10 +203,8 @@ const About = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    // Draw a gradient background
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
     gradient.addColorStop(0, "#87ceeb")
     gradient.addColorStop(0.5, "#98d8e8")
@@ -225,7 +213,6 @@ const About = () => {
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Draw mountains
     ctx.fillStyle = "#8b7355"
     ctx.beginPath()
     ctx.moveTo(0, canvas.height * 0.7)
@@ -236,11 +223,9 @@ const About = () => {
     ctx.closePath()
     ctx.fill()
 
-    // Draw ground
     ctx.fillStyle = "#90ee90"
     ctx.fillRect(0, canvas.height * 0.7, canvas.width, canvas.height * 0.3)
 
-    // Draw sun
     ctx.fillStyle = "#ffd700"
     ctx.beginPath()
     ctx.arc(canvas.width * 0.8, canvas.height * 0.25, 25, 0, Math.PI * 2)
@@ -256,7 +241,6 @@ const About = () => {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     if (!imageRef.current) {
@@ -265,16 +249,13 @@ const About = () => {
     }
 
     try {
-      // Apply filters first
       if (appliedFilters.filter) {
         const { brightness = 1, contrast = 1, saturation = 1, blur = 0, grayscale = 0 } = appliedFilters.filter
         ctx.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) blur(${blur}px) grayscale(${grayscale})`
       }
 
-      // Draw image
       ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height)
 
-      // Reset filter
       ctx.filter = "none"
     } catch (error) {
       console.warn("Error drawing image, using fallback:", error)
@@ -286,7 +267,6 @@ const About = () => {
   }
 
   const applyFiltersToCanvas = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-    // Apply border
     if (appliedFilters.border) {
       const { width, color, style } = appliedFilters.border
       ctx.strokeStyle = color
@@ -299,7 +279,6 @@ const About = () => {
       ctx.strokeRect(width / 2, width / 2, canvas.width - width, canvas.height - width)
     }
 
-    // Apply text with shadow
     if (appliedFilters.textLayer) {
       const {
         text,
@@ -317,7 +296,6 @@ const About = () => {
       ctx.textAlign = textAlign as CanvasTextAlign
       ctx.textBaseline = "middle"
 
-      // Apply shadow if exists
       if (appliedFilters.shadow) {
         const { offsetX, offsetY, blur, color: shadowColor } = appliedFilters.shadow
         ctx.shadowColor = shadowColor
@@ -328,14 +306,12 @@ const About = () => {
 
       ctx.fillText(text, x, y)
 
-      // Reset shadow
       ctx.shadowColor = "transparent"
       ctx.shadowBlur = 0
       ctx.shadowOffsetX = 0
       ctx.shadowOffsetY = 0
     }
 
-    // Apply overlay
     if (appliedFilters.overlay) {
       const { color, blendMode } = appliedFilters.overlay
       ctx.globalCompositeOperation = blendMode as GlobalCompositeOperation
@@ -351,18 +327,15 @@ const About = () => {
 
   const startDemo = () => {
     if (demoStep >= demoCommands.length) {
-      // Clear canvas completely before reset
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext("2d")
         if (ctx) {
           ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-          // Draw the original image without any filters
           if (imageRef.current) {
             ctx.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height)
           }
         }
       }
-      // Reset and start over
       setAppliedFilters({})
       setDemoStep(0)
       setTimeout(() => {
@@ -379,13 +352,11 @@ const About = () => {
     setIsTyping(true)
     setDemoText("")
 
-    // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
 
-    // Typing animation for input
     let currentIndex = 0
     const typingInterval = setInterval(() => {
       if (currentIndex < currentCommand.text.length) {
@@ -395,11 +366,9 @@ const About = () => {
         clearInterval(typingInterval)
         setIsTyping(false)
 
-        // Show processing state
         setTimeout(() => {
           setIsProcessing(true)
 
-          // Apply the filters after message is typed
           setTimeout(() => {
             setAppliedFilters((prev) => ({
               ...prev,
@@ -408,13 +377,11 @@ const About = () => {
 
             setIsProcessing(false)
 
-            // Wait before next step
             setTimeout(() => {
               setDemoStep(step + 1)
               if (step + 1 < demoCommands.length) {
                 runNextDemoStep(step + 1)
               } else {
-                // Wait before resetting
                 setTimeout(() => {
                   startDemo()
                 }, 4000)
@@ -439,24 +406,20 @@ const About = () => {
       </div>
 
       <div className="about-container">
-        {/* Header */}
         <section className={`about-header ${visibleElements.includes(0) ? "visible" : ""}`}>
           <h1 className="about-title">How Our AI Editor Works</h1>
           <p className="about-subtitle">Experience the power of AI-driven image editing with simple text commands</p>
         </section>
 
-        {/* Demo Section */}
         <section className={`demo-section ${visibleElements.includes(1) ? "visible" : ""}`}>
           <div className="demo-container">
             <div className="demo-layout">
-              {/* Left Side - Image */}
               <div className="demo-image-side">
                 <div className="demo-image-container">
                   <canvas ref={canvasRef} width="400" height="300" className="demo-canvas"></canvas>
                 </div>
               </div>
 
-              {/* Right Side - Input Controls */}
               <div className="demo-controls-side">
                 <div className="ai-design-tool">
                   <h2 className="ai-tool-title">AI Image Editor</h2>
@@ -498,7 +461,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Features Section */}
         <section ref={featuresRef} className={`features-detailed ${visibleElements.includes(2) ? "visible" : ""}`}>
           <h2 className="section-title">Powerful Editing Features</h2>
           <div className="features-list">
@@ -558,7 +520,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section ref={ctaRef} className={`cta-section ${visibleElements.includes(4) ? "visible" : ""}`}>
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Images?</h2>

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { StoreType } from '../../store/store';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import apiClient from '../../apiClient';
 import { IconButton } from '@mui/material';
 import { SaveAltRounded } from '@mui/icons-material';
 import "../../css/EditorPreview.css"
 
-const EditorPreview: React.FC = () => {
+const EditorPreview = () => {
 
   const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
 
@@ -48,21 +48,17 @@ const EditorPreview: React.FC = () => {
     if (canvas) {
       const dataURL = canvas.toDataURL("image/png", 1.0)
 
-      // יצירת קישור הורדה
       const link = document.createElement("a")
       link.download = `edited-image-${Date.now()}.png`
       link.href = dataURL
 
-      // הפעלת ההורדה
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
     }
   }
 
-  // קבלת מצב התמונה ישירות מ-Redux
   const { imageState } = useSelector((state: StoreType) => state.aiDesign);
-  // const imageState = useSelector((state: StoreType) => state.aiDesign.present.imageState)
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -70,10 +66,8 @@ const EditorPreview: React.FC = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (canvas && ctx) {
-      // ניקוי הקנבס
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // ציור התמונה
       console.log("in preview", imageState);
 
       const image = new Image();
@@ -88,7 +82,6 @@ const EditorPreview: React.FC = () => {
       image.onload = () => {
         ctx.save();
 
-        // החלת טרנספורמציות אם קיימות
         if (imageState.filters.transform) {
           const { rotation = 0, scale = 1, flipX = false, flipY = false } = imageState.filters.transform;
 
@@ -109,19 +102,17 @@ const EditorPreview: React.FC = () => {
           ctx.translate(-canvas.width / 2, -canvas.height / 2);
         }
 
-        // החלת חיתוך אם קיים
         if (imageState.filters.crop) {
           const { x, y, width, height } = imageState.filters.crop;
           ctx.drawImage(
             image,
-            x, y, width, height, // source
-            0, 0, canvas.width, canvas.height // destination
+            x, y, width, height,
+            0, 0, canvas.width, canvas.height 
           );
         } else {
           ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         }
 
-        // החלת פילטרים אם קיימים
         if (imageState.filters.filter) {
           const { brightness, contrast, saturation, blur, grayscale } = imageState.filters.filter;
 
@@ -139,7 +130,6 @@ const EditorPreview: React.FC = () => {
           }
         }
 
-        // הוספת שכבת צבע אם קיימת
         if (imageState.filters.overlay) {
           const { color, blendMode } = imageState.filters.overlay;
           ctx.globalCompositeOperation = blendMode as GlobalCompositeOperation;
@@ -148,7 +138,6 @@ const EditorPreview: React.FC = () => {
           ctx.globalCompositeOperation = 'source-over';
         }
 
-        // הוספת מסגרת אם קיימת
         if (imageState.filters.border) {
           const { width, color, style } = imageState.filters.border;
           ctx.strokeStyle = color;
@@ -165,7 +154,6 @@ const EditorPreview: React.FC = () => {
           ctx.strokeRect(width / 2, width / 2, canvas.width - width, canvas.height - width);
         }
 
-        // הוספת צל אם קיים
         if (imageState.filters.shadow) {
           const { offsetX, offsetY, blur, color } = imageState.filters.shadow;
           ctx.shadowOffsetX = offsetX;
@@ -180,7 +168,6 @@ const EditorPreview: React.FC = () => {
           ctx.shadowColor = 'transparent';
         }
 
-        // הוספת שכבת טקסט אם קיימת
         if (imageState.filters.textLayer) {
           const { text, x, y, fontSize, color, fontFamily = 'Arial', fontWeight = 'normal', textAlign = 'center' } = imageState.filters.textLayer;
 

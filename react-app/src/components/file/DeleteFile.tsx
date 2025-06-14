@@ -2,20 +2,16 @@ import { Delete } from "@mui/icons-material"
 import { IconButton } from "@mui/material"
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import { deleteFile, softDeleteFile } from "../../store/filesSlice";
+import { softDeleteFile } from "../../store/filesSlice";
 
-const DeleteFile = ({id}:{id:number}) => {
+const DeleteFile = ({id} : {id:number}) => {
 
     const dispatch = useDispatch<AppDispatch>();
 
     const handleDelete = async ()=>{
         try {
-
-            const res = await dispatch(softDeleteFile(id))
-            
+            const res = await dispatch(softDeleteFile(id))  
             console.log(res);
-            console.log('ghj');
-
         }
         catch (e) {
             console.log(e);

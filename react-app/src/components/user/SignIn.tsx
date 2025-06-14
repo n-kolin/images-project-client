@@ -1,5 +1,3 @@
-"use client"
-
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
@@ -20,7 +18,6 @@ import "../../css/AuthForms.css"
 const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
   const loading = useSelector((state: StoreType) => state.users.loading)
 
-  //pass
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
@@ -42,7 +39,6 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const style = modalStyle
 
-  //register
   const dispatch = useDispatch<AppDispatch>()
 
   const onSubmit: SubmitHandler<LoginType> = async (data) => {
@@ -55,15 +51,11 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
 
     console.log(res)
 
-    //on success
     if (res.meta.requestStatus === "fulfilled") {
       dispatch(setCurrentUser(res.payload.userDto))
       console.log(res)
       sessionStorage.setItem("accessToken", res.payload.token)
       console.log(res)
-      console.log("ghj")
-
-      console.log()
 
       onSuccess()
     } else {
@@ -113,8 +105,7 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
                   className="auth-icon-button"
                   aria-label={showPassword ? "hide the password" : "display the password"}
                   onClick={handleClickShowPassword}
-                  //   onMouseDown={handleMouseDownPassword}
-                  //   onMouseUp={handleMouseUpPassword}
+                  
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
                 </button>

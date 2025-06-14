@@ -21,7 +21,6 @@ const initialState: FilesState = {
 
 const baseUrl = '/file'
 
-//כל הקבצים שבתיקית השורש
 export const download = createAsyncThunk<FileType[], number>(
     'files/fetchRootFilesByUser',
     async (userId, thunkAPI) => {

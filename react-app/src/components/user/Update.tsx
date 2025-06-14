@@ -5,13 +5,10 @@ import { object, string } from "yup"
 import { Person, Email, VisibilityOff, Visibility, Close, Edit } from "@mui/icons-material";
 import { Box, Button, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, Modal, OutlinedInput, Radio, RadioGroup, TextField, Typography } from "@mui/material"
 import { modalStyle } from "../../styles/ModalStyle"
-
 import { UserType } from "../../types/UserType";
-
-
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, StoreType } from "../../store/store";
-import {  updateUser } from "../../store/usersSlice";
+import { updateUser } from "../../store/usersSlice";
 import { setCurrentUser } from "../../store/authSlice";
 import Swal from "sweetalert2";
 import DotLoader from "../DotLoader";
@@ -19,15 +16,9 @@ import DotLoader from "../DotLoader";
 const Update = () => {
 
     const loading = useSelector((state: StoreType) => state.users.loading);
-
-
-
-
-    //pass
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    //register
     const dispatch = useDispatch<AppDispatch>();
     const currentUser = useSelector((state: StoreType) => state.auth.currentUser);
 
@@ -44,7 +35,7 @@ const Update = () => {
         formState: { errors },
         reset
     } = useForm({
-        
+
         resolver: yupResolver(UserSchema)
     })
 
@@ -59,21 +50,14 @@ const Update = () => {
 
 
 
-        const res = await dispatch(updateUser({ id: currentUser?.id || -1, user: {...currentUser,...data} }))
+        const res = await dispatch(updateUser({ id: currentUser?.id || -1, user: { ...currentUser, ...data } }))
         if (res.meta.requestStatus === 'fulfilled') {
-
-
             dispatch(setCurrentUser(res.payload.userDto));
             console.log(res);
             sessionStorage.setItem("accessToken", res.payload.token)
-
             console.log(res);
-            console.log('ghj');
-
         }
         else {
-
-            //not success
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -82,8 +66,6 @@ const Update = () => {
 
         }
         setOpen(false)
-
-
 
     }
 
@@ -171,8 +153,6 @@ const Update = () => {
                                                 showPassword ? 'hide the password' : 'display the password'
                                             }
                                             onClick={handleClickShowPassword}
-                                            //   onMouseDown={handleMouseDownPassword}
-                                            //   onMouseUp={handleMouseUpPassword}
                                             edge="end"
                                         >
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -181,10 +161,7 @@ const Update = () => {
                                 }
                             />
                             <FormHelperText error>{errors.password?.message}</FormHelperText>
-
                         </FormControl>
-
-
 
                         <div>
                             <Button type="submit" sx={{
@@ -199,17 +176,9 @@ const Update = () => {
                             {loading && <DotLoader />}
                         </Box>
 
-
-
-
                     </form>
                 </Box>
             </Modal>
-
-
-
-
-
 
         </>
     )

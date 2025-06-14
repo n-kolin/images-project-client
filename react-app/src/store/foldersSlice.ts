@@ -18,10 +18,6 @@ const initialState: FoldersState = {
     error: null,
 };
 
-
-
-
-
 export const getFoldersByUser = createAsyncThunk<FolderType[], number>(
     'folders/getByUser',
     async (userId, thunkAPI) => {
@@ -34,8 +30,6 @@ export const getFoldersByUser = createAsyncThunk<FolderType[], number>(
     }
 );
 
-
-
 export const getFolderById = createAsyncThunk<FolderType, number>(
     'folders/getById',
     async (folderId, thunkAPI) => {
@@ -47,7 +41,6 @@ export const getFolderById = createAsyncThunk<FolderType, number>(
         }
     }
 );
-
 
 
 export const getChildFolders = createAsyncThunk<FolderType[], number>(
