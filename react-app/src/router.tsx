@@ -18,6 +18,13 @@ export const router = createHashRouter([
             { path: '/', element: <Home/>, },
             { path: 'upload', element: <UploadImage /> },
             { path: 'files', element: <AllFiles /> },
+            {path:'edit',element:
+                // <ImageEditorProvider>
+
+            <ImageEditor/> 
+              //  </ImageEditorProvider>
+        }
+
         ]
     }
 ]);
