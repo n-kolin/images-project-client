@@ -1,214 +1,153 @@
-/* Auth Wrapper */
+/* Auth Component Styles */
 .auth-wrapper {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  /* Styled Buttons - Matching Menu Style */
-  .auth-styled-button {
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    padding: 0.75rem 1rem !important;
-    border: none !important;
-    background: transparent !important;
-    cursor: pointer !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    overflow: hidden !important;
-    border-radius: 15px !important;
-    text-transform: none !important;
-    min-width: auto !important;
-    box-shadow: none !important;
-  }
-  
-  .auth-button-icon {
-    color: rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
-    z-index: 3;
-    position: relative;
-  }
-  
-  .auth-button-text {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 500 !important;
-    font-size: 0.9rem !important;
-    position: relative;
-    z-index: 3;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    font-family: "Inter", sans-serif !important;
-  }
-  
-  .auth-button-underline {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
-    border-radius: 1px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateX(-50%);
-  }
-  
-  .auth-styled-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.05));
-    border-radius: 15px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    transform: scale(0.95);
-    z-index: 1;
-  }
-  
-  .auth-styled-button::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: radial-gradient(circle, rgba(196, 181, 253, 0.3) 0%, transparent 70%);
-    border-radius: 50%;
-    transition: all 0.6s ease;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-  }
-  
-  .auth-styled-button:hover::before {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  .auth-styled-button:hover::after {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .auth-styled-button:hover {
-    transform: translateY(-2px) !important;
-    background: transparent !important;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15) !important;
-  }
-  
-  .auth-styled-button:hover .auth-button-underline {
-    width: 70%;
-  }
-  
-  .auth-styled-button:hover .auth-button-text {
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
-  }
-  
-  .auth-styled-button:hover .auth-button-icon {
-    color: #ffffff;
-    transform: scale(1.1);
-  }
-  
-  .auth-styled-button:active {
-    transform: translateY(-1px) !important;
-  }
-  
-  /* Override Material-UI default styles */
-  .auth-styled-button:focus {
-    outline: none !important;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15) !important;
-  }
-  
-  .auth-styled-button .MuiTouchRipple-root {
-    display: none !important;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .auth-wrapper {
-      gap: 0.5rem;
-    }
-  
-    .auth-styled-button {
-      padding: 0.6rem 0.8rem !important;
-    }
-  
-    .auth-button-text {
-      font-size: 0.85rem !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .auth-wrapper {
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-  
-    .auth-styled-button {
-      padding: 0.5rem 0.8rem !important;
-      width: 100%;
-      justify-content: center !important;
-    }
-  }
-  
-  /* Modal Fixed Height - Ensure consistent size */
-  .MuiModal-root .MuiBox-root {
-    min-height: 400px !important;
-    max-height: 400px !important;
-    height: 400px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-  }
-  
-  /* Auth Modal Content Container */
-  .auth-modal-content {
-    flex: 1;
-    display: flex;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* Styled Buttons - Matching Menu Style */
+.auth-styled-button {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  border-radius: 15px !important;
+  text-transform: none !important;
+  min-width: auto !important;
+  box-shadow: none !important;
+}
+
+.auth-button-icon {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  z-index: 3;
+  position: relative;
+}
+
+.auth-button-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  position: relative;
+  z-index: 3;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif !important;
+}
+
+.auth-button-underline {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  border-radius: 1px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+}
+
+.auth-styled-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.05));
+  border-radius: 15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: scale(0.95);
+  z-index: 1;
+}
+
+.auth-styled-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(196, 181, 253, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transition: all 0.6s ease;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.auth-styled-button:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.auth-styled-button:hover::after {
+  width: 80px;
+  height: 80px;
+}
+
+.auth-styled-button:hover {
+  transform: translateY(-2px) !important;
+  background: transparent !important;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15) !important;
+}
+
+.auth-styled-button:hover .auth-button-underline {
+  width: 70%;
+}
+
+.auth-styled-button:hover .auth-button-text {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+}
+
+.auth-styled-button:hover .auth-button-icon {
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.auth-styled-button:active {
+  transform: translateY(-1px) !important;
+}
+
+
+/* Modal Backdrop Enhancement */
+.MuiModal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-wrapper {
     flex-direction: column;
-    justify-content: space-between;
+    width: 100%;
   }
-  
-  /* Toggle Text Styling */
-  .auth-toggle-text {
-    margin: 1rem 0 0 0 !important;
-    text-align: center;
-    font-size: 0.875rem;
-    color: #6b7280;
+
+  .auth-styled-button {
+    width: 100%;
+    min-width: unset;
   }
-  
-  .auth-toggle-text button {
-    color: #8b5cf6 !important;
-    font-weight: 500 !important;
-    text-transform: none !important;
-    padding: 0 !important;
-    min-width: auto !important;
-    font-size: 0.875rem !important;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
   }
-  
-  .auth-toggle-text button:hover {
-    background: transparent !important;
-    color: #7c3aed !important;
-    text-decoration: underline;
+  50% {
+    opacity: 0.5;
   }
-  
-  /* Responsive Modal Height */
-  @media (max-width: 768px) {
-    .MuiModal-root .MuiBox-root {
-      min-height: 380px !important;
-      max-height: 380px !important;
-      height: 380px !important;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .MuiModal-root .MuiBox-root {
-      min-height: 360px !important;
-      max-height: 360px !important;
-      height: 360px !important;
-    }
-  }
-  
+}
+
+.auth-styled-button:disabled {
+  animation: pulse 2s infinite;
+  cursor: not-allowed;
+}

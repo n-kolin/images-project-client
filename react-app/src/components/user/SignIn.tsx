@@ -15,7 +15,7 @@ import { setCurrentUser } from "../../store/authSlice"
 import DotLoader from "../DotLoader"
 import "../../css/AuthForms.css"
 
-const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
+const SignIn = ({ onSuccess, toggleForm }: { onSuccess: () => void, toggleForm:()=>void }) => {
   const loading = useSelector((state: StoreType) => state.users.loading)
 
   const [showPassword, setShowPassword] = useState(false)
@@ -125,6 +125,12 @@ const SignIn = ({ onSuccess }: { onSuccess: () => void }) => {
           </div>
           <div className="auth-loading-container">{loading && <DotLoader />}</div>
         </form>
+        <p className="auth-toggle-text">
+        Don't have an account?
+        <button type="button" className="auth-toggle-button" onClick={toggleForm}>
+          Sign Up
+        </button>
+      </p>
       </div>
     </>
   )

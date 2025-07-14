@@ -1,0 +1,166 @@
+/* Footer Section Styles */
+.footer-section {
+    padding: 2.5rem 0;
+    background-color: #2d3748; /* Dark gray background */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Lighter border for dark background */
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #e2e8f0; /* Light text color for contrast */
+    margin-top: 6rem; /* Increased margin-top to push it lower and separate it */
+  }
+  
+  .footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .footer-main-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Lighter border for dark background */
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-column {
+    flex: 1;
+    min-width: 180px;
+    max-width: 400px;
+  }
+  
+  .footer-brand-column {
+    text-align: left;
+  }
+  
+  .footer-social-column {
+    text-align: right;
+  }
+  
+  .footer-logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    /* Gradient text should still work well on dark background */
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-tagline {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #a0aec0; /* Slightly lighter gray for tagline */
+  }
+  
+  .footer-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f7fafc; /* White for heading */
+    margin-bottom: 0.75rem;
+  }
+  
+  .footer-social-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .footer-social-link {
+    color: #a0aec0; /* Light gray for link text */
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.08); /* Subtle background for dark theme */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle border for dark theme */
+  }
+  
+  .footer-social-link:hover {
+    color: #6366f1; /* Primary color on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    background: rgba(99, 102, 241, 0.15); /* Slightly more prominent background on hover */
+  }
+  
+  .social-icon {
+    width: 20px;
+    height: 20px;
+    color: #a0aec0; /* Light gray for icon */
+    transition: color 0.3s ease;
+  }
+  
+  .footer-social-link:hover .social-icon {
+    color: #6366f1; /* Primary color on hover */
+  }
+  
+  .footer-bottom {
+    text-align: center;
+  }
+  
+  .footer-copyright {
+    font-size: 0.8rem;
+    color: #a0aec0; /* Light gray for copyright text */
+  }
+  
+  .footer-company-name {
+    font-weight: 600;
+    color: #f7fafc; /* White for company name */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .footer-main-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .footer-column {
+      max-width: 100%;
+      min-width: unset;
+      width: 100%;
+    }
+  
+    .footer-brand-column,
+    .footer-social-column {
+      text-align: center;
+    }
+  
+    .footer-social-list {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .footer-section {
+      padding: 2rem 0;
+    }
+    .footer-logo {
+      font-size: 1.4rem;
+    }
+    .footer-heading {
+      font-size: 0.9rem;
+    }
+    .footer-social-link {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+    }
+    .social-icon {
+      width: 18px;
+      height: 18px;
+    }
+    .footer-copyright {
+      font-size: 0.7rem;
+    }
+  }
+  

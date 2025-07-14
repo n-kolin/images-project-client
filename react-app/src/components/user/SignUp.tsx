@@ -15,7 +15,7 @@ import Swal from "sweetalert2"
 import DotLoader from "../DotLoader"
 import "../../css/AuthForms.css"
 
-const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
+const SignUp = ({ onSuccess, toggleForm }: { onSuccess: () => void, toggleForm:()=>void }) => {
   const loading = useSelector((state: StoreType) => state.users.loading)
 
   const [showPassword, setShowPassword] = useState(false)
@@ -148,6 +148,12 @@ const SignUp = ({ onSuccess }: { onSuccess: () => void }) => {
 
           <div className="auth-loading-container">{loading && <DotLoader />}</div>
         </form>
+        <p className="auth-toggle-text">
+        Already have an account?
+        <button type="button" className="auth-toggle-button" onClick={toggleForm}>
+          Sign In
+        </button>
+      </p>
       </div>
     </>
   )

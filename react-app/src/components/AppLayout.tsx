@@ -1,6 +1,7 @@
 import { Outlet } from "react-router"
 import Menu from "./Menu"
 import { Box } from "@mui/material"
+import Footer from "./Footer"
 
 const AppLayout = () => {
     return (<>
@@ -8,6 +9,7 @@ const AppLayout = () => {
         <Box    sx={{ marginTop: 10, padding: 2 }}>
             <Outlet />
         </Box>
+        <Footer />
     </>)
 }
 export default AppLayout

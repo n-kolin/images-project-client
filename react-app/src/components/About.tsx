@@ -1,5 +1,6 @@
+"use client"
+
 import { useEffect, useState, useRef } from "react"
-import { useNavigate } from "react-router"
 import "../css/About.css"
 
 interface ImageFilters {
@@ -50,8 +51,6 @@ interface ImageFilters {
 }
 
 const About = () => {
-  const navigate = useNavigate()
-  const [visibleElements, setVisibleElements] = useState<number[]>([])
   const [demoStep, setDemoStep] = useState(0)
   const [demoText, setDemoText] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -60,9 +59,6 @@ const About = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageRef = useRef<HTMLImageElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  const featuresRef = useRef<HTMLElement>(null)
-  const ctaRef = useRef<HTMLElement>(null)
 
   const imageUrl = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
 
@@ -130,52 +126,7 @@ const About = () => {
   ]
 
   useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: "0px 0px -50px 0px",
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (entry.target === featuresRef.current) {
-            setTimeout(() => {
-              setVisibleElements((prev) => [...prev, 2])
-            }, 300)
-            setTimeout(() => {
-              setVisibleElements((prev) => [...prev, 3])
-            }, 800) 
-          }
-          if (entry.target === ctaRef.current) {
-            setTimeout(() => {
-              setVisibleElements((prev) => [...prev, 4])
-            }, 400)
-          }
-        }
-      })
-    }, observerOptions)
-
-    if (featuresRef.current) observer.observe(featuresRef.current)
-    if (ctaRef.current) observer.observe(ctaRef.current)
-
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const timeouts: number[] = []
-
-    for (let i = 0; i < 2; i++) {
-      const timeout = setTimeout(() => {
-        setVisibleElements((prev) => [...prev, i])
-      }, i * 800) 
-      timeouts.push(timeout)
-    }
-
     loadImage()
-
-    return () => {
-      timeouts.forEach((timeout) => clearTimeout(timeout))
-    }
   }, [])
 
   const loadImage = () => {
@@ -189,6 +140,7 @@ const About = () => {
       }, 1000)
     }
     imageRef.current.onerror = () => {
+      console.warn("Failed to load image, using fallback.")
       drawFallbackImage()
       setTimeout(() => {
         startDemo()
@@ -198,7 +150,6 @@ const About = () => {
 
   const drawFallbackImage = () => {
     if (!canvasRef.current) return
-
     const canvas = canvasRef.current
     const ctx = canvas.getContext("2d")
     if (!ctx) return
@@ -236,12 +187,11 @@ const About = () => {
 
   const drawImageOnCanvas = () => {
     if (!canvasRef.current) return
-
     const canvas = canvasRef.current
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, canvas.width, canvas.height) // Always clear before drawing
 
     if (!imageRef.current) {
       drawFallbackImage()
@@ -249,24 +199,26 @@ const About = () => {
     }
 
     try {
+      // Apply global filters before drawing the image
       if (appliedFilters.filter) {
         const { brightness = 1, contrast = 1, saturation = 1, blur = 0, grayscale = 0 } = appliedFilters.filter
         ctx.filter = `brightness(${brightness}) contrast(${contrast}) saturate(${saturation}) blur(${blur}px) grayscale(${grayscale})`
       }
 
       ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height)
-
-      ctx.filter = "none"
+      ctx.filter = "none" // Reset filter after drawing image to not affect subsequent drawings
     } catch (error) {
       console.warn("Error drawing image, using fallback:", error)
       drawFallbackImage()
       return
     }
 
-    applyFiltersToCanvas(ctx, canvas)
+    applyFiltersToCanvas(ctx, canvas) // Apply other filters on top
   }
 
   const applyFiltersToCanvas = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    ctx.save() // Save the current canvas state
+
     if (appliedFilters.border) {
       const { width, color, style } = appliedFilters.border
       ctx.strokeStyle = color
@@ -306,6 +258,7 @@ const About = () => {
 
       ctx.fillText(text, x, y)
 
+      // Reset shadow properties after drawing text
       ctx.shadowColor = "transparent"
       ctx.shadowBlur = 0
       ctx.shadowOffsetX = 0
@@ -317,8 +270,10 @@ const About = () => {
       ctx.globalCompositeOperation = blendMode as GlobalCompositeOperation
       ctx.fillStyle = color
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.globalCompositeOperation = "source-over"
+      ctx.globalCompositeOperation = "source-over" // Reset blend mode
     }
+
+    ctx.restore() // Restore the canvas state
   }
 
   useEffect(() => {
@@ -327,20 +282,26 @@ const About = () => {
 
   const startDemo = () => {
     if (demoStep >= demoCommands.length) {
-      if (canvasRef.current) {
+      // Reset all filters and clear text area
+      setAppliedFilters({})
+      setDemoText("")
+      setIsProcessing(false)
+      setIsTyping(false)
+
+      // Redraw the original image immediately after resetting filters
+      if (canvasRef.current && imageRef.current) {
         const ctx = canvasRef.current.getContext("2d")
         if (ctx) {
           ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-          if (imageRef.current) {
-            ctx.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height)
-          }
+          ctx.drawImage(imageRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height)
         }
       }
-      setAppliedFilters({})
-      setDemoStep(0)
+
+      // Wait a moment before starting the next command sequence.
       setTimeout(() => {
+        setDemoStep(0)
         runNextDemoStep(0)
-      }, 2000)
+      }, 2000) // Give it 2 seconds to show the clean image before starting next command
       return
     }
 
@@ -350,7 +311,7 @@ const About = () => {
   const runNextDemoStep = (step: number) => {
     const currentCommand = demoCommands[step]
     setIsTyping(true)
-    setDemoText("")
+    setDemoText("") // Clear text before typing new one
 
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto"
@@ -365,36 +326,28 @@ const About = () => {
       } else {
         clearInterval(typingInterval)
         setIsTyping(false)
-
         setTimeout(() => {
           setIsProcessing(true)
-
           setTimeout(() => {
             setAppliedFilters((prev) => ({
               ...prev,
               ...currentCommand.filters,
             }))
-
             setIsProcessing(false)
-
             setTimeout(() => {
               setDemoStep(step + 1)
               if (step + 1 < demoCommands.length) {
                 runNextDemoStep(step + 1)
               } else {
                 setTimeout(() => {
-                  startDemo()
+                  startDemo() // Restart demo after all commands
                 }, 4000)
               }
             }, 2000)
           }, 1000)
-        }, 1000)
+        }, 100)
       }
     }, 100)
-  }
-
-  const handleGetStarted = () => {
-    navigate("/files")
   }
 
   return (
@@ -404,14 +357,13 @@ const About = () => {
         <div className="floating-orb orb-2"></div>
         <div className="floating-orb orb-3"></div>
       </div>
-
       <div className="about-container">
-        <section className={`about-header ${visibleElements.includes(0) ? "visible" : ""}`}>
+        <section className="about-header">
           <h1 className="about-title">How Our AI Editor Works</h1>
           <p className="about-subtitle">Experience the power of AI-driven image editing with simple text commands</p>
         </section>
 
-        <section className={`demo-section ${visibleElements.includes(1) ? "visible" : ""}`}>
+        <section className="demo-section">
           <div className="demo-container">
             <div className="demo-layout">
               <div className="demo-image-side">
@@ -419,11 +371,9 @@ const About = () => {
                   <canvas ref={canvasRef} width="400" height="300" className="demo-canvas"></canvas>
                 </div>
               </div>
-
               <div className="demo-controls-side">
                 <div className="ai-design-tool">
                   <h2 className="ai-tool-title">AI Image Editor</h2>
-
                   <div className="ai-form">
                     <div className="input-container">
                       <textarea
@@ -444,7 +394,6 @@ const About = () => {
                 </div>
               </div>
             </div>
-
             <div className="demo-info">
               <div className="info-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -461,10 +410,10 @@ const About = () => {
           </div>
         </section>
 
-        <section ref={featuresRef} className={`features-detailed ${visibleElements.includes(2) ? "visible" : ""}`}>
+        <section className="features-detailed">
           <h2 className="section-title">Powerful Editing Features</h2>
           <div className="features-list">
-            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+            <div className="feature-item">
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -477,8 +426,7 @@ const About = () => {
                 <p>Add borders, frames, text overlays, and visual effects with simple text commands.</p>
               </div>
             </div>
-
-            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+            <div className="feature-item">
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -489,8 +437,7 @@ const About = () => {
                 <p>Build complex edits step by step. Each command enhances and builds upon previous changes.</p>
               </div>
             </div>
-
-            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+            <div className="feature-item">
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M12 2v8m0 4v8M4.93 4.93l5.66 5.66m2.83 2.83l5.66 5.66M2 12h8m4 0h8M4.93 19.07l5.66-5.66m2.83-2.83l5.66-5.66" />
@@ -501,8 +448,7 @@ const About = () => {
                 <p>Apply brightness, contrast, saturation adjustments and creative filters with natural language.</p>
               </div>
             </div>
-
-            <div className={`feature-item ${visibleElements.includes(3) ? "visible" : ""}`}>
+            <div className="feature-item">
               <div className="feature-icon-small">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -520,18 +466,12 @@ const About = () => {
           </div>
         </section>
 
-        <section ref={ctaRef} className={`cta-section ${visibleElements.includes(4) ? "visible" : ""}`}>
+        <section className="cta-section">
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Images?</h2>
             <p className="cta-description">
               Experience the power of AI-driven image editing with our intuitive platform.
             </p>
-            <button className="cta-button-large" onClick={handleGetStarted}>
-              <svg className="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-              </svg>
-              Start Editing Now
-            </button>
           </div>
         </section>
       </div>

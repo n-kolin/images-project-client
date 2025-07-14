@@ -40,7 +40,7 @@ const Auth = () => {
     <div className="auth-wrapper">
       {!currentUser ? (
         <>
-          <Button
+          <button
             className="auth-styled-button"
             onClick={() => {
               setOpen(true)
@@ -50,9 +50,9 @@ const Auth = () => {
             <LogIn size={16} className="auth-button-icon" />
             <span className="auth-button-text">Sign In</span>
             <div className="auth-button-underline"></div>
-          </Button>
+          </button>
 
-          <Button
+          <button
             className="auth-styled-button"
             onClick={() => {
               setOpen(true)
@@ -62,11 +62,11 @@ const Auth = () => {
             <UserPlus size={16} className="auth-button-icon" />
             <span className="auth-button-text">Sign Up</span>
             <div className="auth-button-underline"></div>
-          </Button>
+          </button>
         </>
       ) : (
         <>
-          <Button
+          <button
             className="auth-styled-button"
             onClick={() => {
               signOut()
@@ -75,9 +75,9 @@ const Auth = () => {
             <LogOut size={16} className="auth-button-icon" />
             <span className="auth-button-text">Sign Out</span>
             <div className="auth-button-underline"></div>
-          </Button>
+          </button>
 
-          <Button
+          <button
             className="auth-styled-button"
             onClick={() => {
               update()
@@ -86,35 +86,25 @@ const Auth = () => {
             <Settings size={16} className="auth-button-icon" />
             <span className="auth-button-text">Update</span>
             <div className="auth-button-underline"></div>
-          </Button>
+          </button>
         </>
       )}
 
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="auth-modal-title"
-        aria-describedby="auth-modal-description"
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        
         <Box sx={modalStyle}>
           {isSignIn ? (
-            <div>
-              <SignIn onSuccess={handleSuccess} />
-              <p>
-                Don't have an account? <Button onClick={toggleForm}>Sign Up</Button>
-              </p>
-            </div>
+            <SignIn onSuccess={handleSuccess} toggleForm={toggleForm} />
           ) : (
-            <div>
-              <SignUp onSuccess={handleSuccess} />
-              <p>
-                Already have an account? <Button onClick={toggleForm}>Sign In</Button>
-              </p>
-            </div>
+            <SignUp onSuccess={handleSuccess} toggleForm={toggleForm} />
           )}
         </Box>
       </Modal>
+
     </div>
   )
 }
